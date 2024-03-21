@@ -40,7 +40,7 @@ class CommonCfgObject {
     }
 }
 public class BufferReaderCommonCfg{
-    public static CommonCfgObject reader(String cfgFile) throws IOException
+    public static CommonCfgObject reader() throws IOException
     {
         int numberOfPreferredNeighbors = 0;
         int unchokingInterval = 0;
@@ -82,6 +82,7 @@ public class BufferReaderCommonCfg{
                 continue;
             }
         }
+        brIn.close();
         return new CommonCfgObject(numberOfPreferredNeighbors, unchokingInterval, optimisticUnchokingInterval, fileName, fileSize, pieceSize);
     }
 }
