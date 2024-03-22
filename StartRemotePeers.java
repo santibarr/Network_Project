@@ -1,4 +1,9 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /*
  * The StartRemotePeers.StartRemotePeers.StartRemotePeers.StartRemotePeers class begins remote peer processes.
@@ -10,9 +15,29 @@ public class StartRemotePeers {
 
 	public Vector<RemotePeerInfo> peerInfoVector;
 	
-	public void getConfiguration()
+	public void getConfiguration() throws IOException
 	{
+		peerInfoVector = new Vector<RemotePeerInfo>();
+		SortedMap<String, RemotePeerInfo> peerMap = new TreeMap<>();
+		try {
+			BufferedReader brIn = new BufferedReader(new FileReader("PeerInfo.cfg"));
+			String line;
 
+			// we are reading in the PeerInfo.cfg and storing it in a map in order of the peerID
+			while ((line = brIn.readLine()) != null) {
+				String[] peerInfo = line.split(" ");
+				String pId = peerInfo[0];
+				String pAddress = peerInfo[1];
+				String pPort = peerInfo[2];
+				RemotePeerInfo rpInfo = new RemotePeerInfo(pId, pAddress, pPort);
+				peerMap.put(peerInfo[0], rpInfo);
+				//We are also adding the Peer Info to a vector
+				peerInfoVector.addElement(new RemotePeerInfo(peerInfo[0], peerInfo[1], peerInfo[2]));
+			}
+			brIn.close();
+		} catch(Exception ex) {
+			System.out.println(ex.toString());
+		}
 		//from the reader for Peer Info add them all to a vector
 		/*String st;
 		int i1;
