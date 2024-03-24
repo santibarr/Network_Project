@@ -13,7 +13,8 @@ public class BufferReaderRemotePeerInfo {
             String pId = peerInfo[0];
             String pAddress = peerInfo[1];
             String pPort = peerInfo[2];
-            RemotePeerInfo rpInfo = new RemotePeerInfo(pId, pAddress, pPort);
+            String hasfile = peerInfo[3];
+            RemotePeerInfo rpInfo = new RemotePeerInfo(pId, pAddress, pPort, hasfile);
             peerMap.put(peerInfo[0], rpInfo);
         }
         return peerMap;

@@ -29,10 +29,11 @@ public class StartRemotePeers {
 				String pId = peerInfo[0];
 				String pAddress = peerInfo[1];
 				String pPort = peerInfo[2];
-				RemotePeerInfo rpInfo = new RemotePeerInfo(pId, pAddress, pPort);
+				String hasFile = peerInfo[3];
+				RemotePeerInfo rpInfo = new RemotePeerInfo(pId, pAddress, pPort, hasFile);
 				peerMap.put(peerInfo[0], rpInfo);
 				//We are also adding the Peer Info to a vector
-				peerInfoVector.addElement(new RemotePeerInfo(peerInfo[0], peerInfo[1], peerInfo[2]));
+				peerInfoVector.addElement(new RemotePeerInfo(peerInfo[0], peerInfo[1], peerInfo[2], peerInfo[3]));
 			}
 			brIn.close();
 		} catch(Exception ex) {
