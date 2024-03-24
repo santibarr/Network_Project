@@ -38,6 +38,7 @@ public class Logs {
                 logger.removeHandler(handler);
             }
 
+            //setup new fileHandler
             logger.setUseParentHandlers(false);
             fileHand = new FileHandler(PeerID + ".log");
             logger.addHandler(fileHand);
