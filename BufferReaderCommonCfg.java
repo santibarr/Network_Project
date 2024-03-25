@@ -32,7 +32,7 @@ class CommonCfgObject {
     public String getFileName() {
         return fileName;
     }
-    public long getFileSize() {
+    public int getFileSize() {
         return fileSize;
     }
     public int getPieceSize() {

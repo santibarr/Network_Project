@@ -3,8 +3,42 @@
 //respectively. The next one corresponds to piece indices 8 – 15, etc. Spare bits at the end
 //are set to zero. Peers that don’t have anything yet may skip a ‘bitfield’ message.
 
+import java.io.IOException;
+import java.util.Objects;
+import java.util.SortedMap;
+import java.util.Iterator;
+import java.util.Map;
+
 public class BitFieldMessage {
     // i want to convert the byte to integer to see the piece that the bitfield is representing
+    //call the reader to see who has the complete file
+    public static byte[] peerHasCompleteFile() throws IOException {
+        BufferReaderRemotePeerInfo peer = new BufferReaderRemotePeerInfo();
+        SortedMap<String,RemotePeerInfo> peerMap = BufferReaderRemotePeerInfo.reader();
+        int fileSize = BufferReaderCommonCfg.reader().getFileSize();
+        int pieceSize = BufferReaderCommonCfg.reader().getPieceSize();
+        int pieceNums = (int) Math.ceil((double)fileSize/pieceSize);
+
+        byte[] storeBitField = new byte[pieceNums];
+
+        //iterate through the map and find who has the complete file
+        Iterator<Map.Entry<String, RemotePeerInfo>> iterator = peerMap.entrySet().iterator();
+
+        while(iterator.hasNext()){
+            Map.Entry<String, RemotePeerInfo> entry = iterator.next(); // fill the bitfield woth 1 if it has the complete file
+            if(Objects.equals(entry.getValue().peerHasFile, "1")){
+                for(int i = 0; i < pieceNums; i++){
+                    storeBitField[i] = 1;
+                }
+            }
+            else if(Objects.equals(entry.getValue().peerHasFile, "0")){
+                for(int i = 0; i < pieceNums; i++){
+                    storeBitField[i] = 0; // fill the bitfield with 0 if it doesnt have the complete file
+                }
+            }
+        }
+        return storeBitField;
+    }
     public static int byteArrayToInt(byte[] bytes){
         int value = 0;
         for(int i = 0; i < 4; i++)
@@ -24,4 +58,6 @@ public class BitFieldMessage {
         }
         return value;
     }
+    //must create a bitfield for the initial peer that has the complete file
+
 }

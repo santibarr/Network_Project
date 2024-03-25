@@ -40,7 +40,7 @@ public class StartRemotePeers {
 			System.out.println(ex.toString());
 		}
 		//from the reader for Peer Info add them all to a vector
-		/*String st;
+		String st;
 		int i1;
 		peerInfoVector = new Vector<RemotePeerInfo>();
 		try {
@@ -54,7 +54,7 @@ public class StartRemotePeers {
 			     //}
 		         //System.out.println("tokens end ----");
 
-			     peerInfoVector.addElement(new RemotePeerInfo(tokens[0], tokens[1], tokens[2]));
+			     peerInfoVector.addElement(new RemotePeerInfo(tokens[0], tokens[1], tokens[2], tokens[3]));
 
 			}
 
@@ -62,7 +62,7 @@ public class StartRemotePeers {
 		}
 		catch (Exception ex) {
 			System.out.println(ex.toString());
-		}*/
+		}
 	}
 	
 	/**

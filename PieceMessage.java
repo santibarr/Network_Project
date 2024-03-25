@@ -25,3 +25,4 @@ public class PieceMessage {
         return values;
     }
 }
+// make a vector of the pieces that the peer has
