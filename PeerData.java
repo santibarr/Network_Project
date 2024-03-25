@@ -72,8 +72,8 @@ public class PeerData {
         int pieceSize = BufferReaderCommonCfg.reader().getPieceSize();
         int pieceNums = (int) Math.ceil((double)fileSize/pieceSize);
         while(iterator.hasNext()){
-            Map.Entry<String, byte[]> entry = iterator.next();
-            byte[] bitField = entry.getValue();
+            Map.Entry<String, byte[]> it = iterator.next();
+            byte[] bitField = it.getValue();
             for(int i = 0; i < pieceNums; i++){
                 if(bitField[i] == 0){
                     canEnd = false;

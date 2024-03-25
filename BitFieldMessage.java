@@ -23,18 +23,18 @@ public class BitFieldMessage {
         Iterator<Map.Entry<String, RemotePeerInfo>> iterator = peerMap.entrySet().iterator();
 
         while(iterator.hasNext()){
-            Map.Entry<String, RemotePeerInfo> entry = iterator.next(); // fill the bitfield woth 1 if it has the complete file
-            if(Objects.equals(entry.getValue().peerHasFile, "1")){
+            Map.Entry<String, RemotePeerInfo> it = iterator.next(); // fill the bitfield woth 1 if it has the complete file
+            if(Objects.equals(it.getValue().peerHasFile, "1")){
                 for(int i = 0; i < pieceNums; i++){
                     storeBitField[i] = 1;
                 }
-                mapWithBitfield.put(entry.getKey(), storeBitField);
+                mapWithBitfield.put(it.getKey(), storeBitField);
             }
-            else if(Objects.equals(entry.getValue().peerHasFile, "0")){
+            else if(Objects.equals(it.getValue().peerHasFile, "0")){
                 for(int i = 0; i < pieceNums; i++){
                     storeBitField[i] = 0; // fill the bitfield with 0 if it doesnt have the complete file
                 }
-                mapWithBitfield.put(entry.getKey(), storeBitField);
+                mapWithBitfield.put(it.getKey(), storeBitField);
             }
         }
         return mapWithBitfield;
