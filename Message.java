@@ -14,6 +14,10 @@ public class Message {
     byte messageType;
     byte[] payload;
 
+    //additional information about source and destination of the message
+    int sourcePeerID;
+    int destinationPeerID;
+
     // Enum to map message type to byte representation:
     public enum MessageType {
         CHOKE(0),
@@ -47,10 +51,12 @@ public class Message {
     }
 
     //constructor to parse a byte array to a Message object
-    public Message(byte[] byteArray) {
+    public Message(byte[] byteArray, int src, int dest) {
         if (byteArray.length < 5) { //minimum length is 5 bytes (length + type)
             throw new IllegalArgumentException("Invalid message format");
         }
+        sourcePeerID = src;
+        destinationPeerID = dest;
 
         ByteBuffer buffer = ByteBuffer.wrap(byteArray);
         this.messageLength = buffer.getInt(); //first 4 bytes for length
@@ -83,6 +89,29 @@ public class Message {
                 ", messageType=" + MessageType.fromByte(messageType) +
                 ", payload=" + Arrays.toString(payload) +
                 '}';
+    }
+
+    public void HandleMessage(Message message)
+    {
+        switch(message.messageType)
+        {
+            case 0:
+                System.out.println("Choke");
+            case 1:
+                System.out.println("Unchoke");
+            case 2:
+                System.out.println("Interested");
+            case 3:
+                System.out.println("Not Interested");
+            case 4:
+                System.out.println("Have");
+            case 5:
+                System.out.println("Bitfield");
+            case 6:
+                System.out.println("Request");
+            case 7:
+                System.out.println("Piece");
+        }
     }
 
 }
