@@ -1,4 +1,8 @@
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 public class PeerData {
 
     public boolean interested;
@@ -55,6 +59,28 @@ public class PeerData {
 
     public void notChoking(){
         this.choked = false;
+    }
+
+    //check the all the peers have the bitfield filled with ones which means that they all have the complete file
+    public static boolean canTerminate() throws IOException {
+        boolean canEnd = true;
+        //check the map with all the peers and their bitfields
+        Map<String, byte[]> allBitfields = new HashMap<>();
+        allBitfields = BitFieldMessage.peerHasCompleteFile();
+        Iterator<Map.Entry<String, byte[]>> iterator = allBitfields.entrySet().iterator();
+        int fileSize = BufferReaderCommonCfg.reader().getFileSize();
+        int pieceSize = BufferReaderCommonCfg.reader().getPieceSize();
+        int pieceNums = (int) Math.ceil((double)fileSize/pieceSize);
+        while(iterator.hasNext()){
+            Map.Entry<String, byte[]> entry = iterator.next();
+            byte[] bitField = entry.getValue();
+            for(int i = 0; i < pieceNums; i++){
+                if(bitField[i] == 0){
+                    canEnd = false;
+                }
+            }
+        }
+        return canEnd;
     }
     
 }

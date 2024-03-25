@@ -4,15 +4,13 @@
 //are set to zero. Peers that don’t have anything yet may skip a ‘bitfield’ message.
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.SortedMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class BitFieldMessage {
     // i want to convert the byte to integer to see the piece that the bitfield is representing
     //call the reader to see who has the complete file
-    public static byte[] peerHasCompleteFile() throws IOException {
+    public static Map<String,byte[]> peerHasCompleteFile() throws IOException {
+        Map<String,byte[]> mapWithBitfield = new HashMap<>();
         BufferReaderRemotePeerInfo peer = new BufferReaderRemotePeerInfo();
         SortedMap<String,RemotePeerInfo> peerMap = BufferReaderRemotePeerInfo.reader();
         int fileSize = BufferReaderCommonCfg.reader().getFileSize();
@@ -30,14 +28,16 @@ public class BitFieldMessage {
                 for(int i = 0; i < pieceNums; i++){
                     storeBitField[i] = 1;
                 }
+                mapWithBitfield.put(entry.getKey(), storeBitField);
             }
             else if(Objects.equals(entry.getValue().peerHasFile, "0")){
                 for(int i = 0; i < pieceNums; i++){
                     storeBitField[i] = 0; // fill the bitfield with 0 if it doesnt have the complete file
                 }
+                mapWithBitfield.put(entry.getKey(), storeBitField);
             }
         }
-        return storeBitField;
+        return mapWithBitfield;
     }
     public static int byteArrayToInt(byte[] bytes){
         int value = 0;

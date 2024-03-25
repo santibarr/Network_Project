@@ -24,5 +24,6 @@ public class PieceMessage {
         }
         return values;
     }
+    //initial storage of pieces for each peer
+    //so each peer must have pieces stored in a map
 }
-// make a vector of the pieces that the peer has
