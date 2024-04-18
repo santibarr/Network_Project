@@ -1,9 +1,11 @@
+package Messages;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class Handshake {
     /*
-    Handshake message is 32 byte array
+    Messages.Handshake message is 32 byte array
     18 byte Header: "P2PFILESHARINGPROJ"
     10 byte zeroes: "0000000000"
     4 byte PeerId: "1001"
@@ -36,7 +38,7 @@ public class Handshake {
 
     }
 
-    //construct a Handshake message from a byte array
+    //construct a Messages.Handshake message from a byte array
     public Handshake(byte[] byteArray) {
         if (byteArray.length != 32) {
             throw new IllegalArgumentException("Invalid handshake message length.");
@@ -53,11 +55,11 @@ public class Handshake {
         this.handshakeByteArray = byteArray.clone();
 
     }
-    //convert Handshake object to byte array to send over the network
+    //convert Messages.Handshake object to byte array to send over the network
     public byte[] toByteArray() {
         return handshakeByteArray.clone();
     }
-    //Create a Handshake object from received byte array
+    //Create a Messages.Handshake object from received byte array
     public static Handshake fromByteArray(byte[] byteArray) {
         return new Handshake(byteArray);
     }
@@ -65,7 +67,7 @@ public class Handshake {
     //for debugging purposes:
     @Override
     public String toString() {
-        return "Handshake{" +
+        return "Messages.Handshake{" +
                 "peerId=" + peerId +
                 ", handshakeMessage=" + Arrays.toString(handshakeByteArray) +
                 '}';

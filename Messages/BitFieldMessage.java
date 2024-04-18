@@ -1,4 +1,4 @@
-//Each bit in the bitfield payload represents whether the peer has the corresponding piece or not. The
+package Messages;//Each bit in the bitfield payload represents whether the peer has the corresponding piece or not. The
 //first byte of the bitfield corresponds to piece indices 0 – 7 from high bit to low bit,
 //respectively. The next one corresponds to piece indices 8 – 15, etc. Spare bits at the end
 //are set to zero. Peers that don’t have anything yet may skip a ‘bitfield’ message.
@@ -12,7 +12,7 @@ public class BitFieldMessage {
     public static Map<String,byte[]> peerHasCompleteFile() throws IOException {
         Map<String,byte[]> mapWithBitfield = new HashMap<>();
         BufferReaderRemotePeerInfo peer = new BufferReaderRemotePeerInfo();
-        SortedMap<String,RemotePeerInfo> peerMap = BufferReaderRemotePeerInfo.reader();
+        SortedMap<String, RemotePeerInfo> peerMap = BufferReaderRemotePeerInfo.reader();
         int fileSize = BufferReaderCommonCfg.reader().getFileSize();
         int pieceSize = BufferReaderCommonCfg.reader().getPieceSize();
         int pieceNums = (int) Math.ceil((double)fileSize/pieceSize);

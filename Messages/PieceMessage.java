@@ -1,3 +1,5 @@
+package Messages;
+
 import java.util.Arrays;
 
 public class PieceMessage {

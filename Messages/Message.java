@@ -1,12 +1,14 @@
+package Messages;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 
 public class Message {
     /*
-    Message consists of 3 parts
-    4 byte Message Length
-    1 byte Type of Message (mapped with MessageType enum)
+    Messages.Message consists of 3 parts
+    4 byte Messages.Message Length
+    1 byte Type of Messages.Message (mapped with MessageType enum)
     variable size Payload
      */
 
@@ -50,7 +52,7 @@ public class Message {
         }
     }
 
-    //constructor to parse a byte array to a Message object
+    //constructor to parse a byte array to a Messages.Message object
     public Message(byte[] byteArray, int src, int dest) {
         if (byteArray.length < 5) { //minimum length is 5 bytes (length + type)
             throw new IllegalArgumentException("Invalid message format");
@@ -73,7 +75,7 @@ public class Message {
         }
     }
 
-    // Method to serialize the Message object into a byte array
+    // Method to serialize the Messages.Message object into a byte array
     public byte[] toByteArray() {
         ByteBuffer buffer = ByteBuffer.allocate(4 + messageLength);
         buffer.putInt(messageLength);
@@ -84,7 +86,7 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" +
+        return "Messages.Message{" +
                 "messageLength=" + messageLength +
                 ", messageType=" + MessageType.fromByte(messageType) +
                 ", payload=" + Arrays.toString(payload) +
