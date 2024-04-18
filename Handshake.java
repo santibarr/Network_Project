@@ -10,24 +10,30 @@ public class Handshake {
      */
 
     byte[] handshakeByteArray = new byte[32];
-    int peerId;
+    String peerId;
     final String HEADER = "P2PFILESHARINGPROJ";
+    final int Header_length = 18;
+    final int zeroes_length = 10;
+    final int peer_id_length = 4;
+    final int handshake_length = 32;
 
     //making two ctor's because I am unsure of the usage
 
     //construct a Handhsake message with the peerID
-    public Handshake(int peerId) {
+    public Handshake(String peerId) {
         this.peerId = peerId;
 
         // populate the first 18 bytes of the byte array with the header
-        System.arraycopy(HEADER.getBytes(), 0, handshakeByteArray, 0, HEADER.length());
+        System.arraycopy(HEADER.getBytes(), 0, handshakeByteArray, 0, Header_length);
 
-        //next 10 bytes will be zeroes by default
+        //next 10 bytes will be zeroes
+        Arrays.fill(handshakeByteArray,Header_length,Header_length + zeroes_length,(byte)0);
 
         //populate the last 4 bytes of the byte array with the peerId
         // Convert peerId to a byte array
-        byte[] peerIdBytes = ByteBuffer.allocate(4).putInt(peerId).array();
+        byte[] peerIdBytes = ByteBuffer.allocate(peer_id_length).putInt(Integer.parseInt(peerId)).array();
         System.arraycopy(peerIdBytes, 0, handshakeByteArray, 28, 4);
+
     }
 
     //construct a Handshake message from a byte array
@@ -42,9 +48,18 @@ public class Handshake {
         }
         //extract the peerId
         ByteBuffer wrapped = ByteBuffer.wrap(Arrays.copyOfRange(byteArray, 28, 32));
-        this.peerId = wrapped.getInt();
+        this.peerId = String.valueOf(wrapped.getInt());
 
         this.handshakeByteArray = byteArray.clone();
+
+    }
+    //convert Handshake object to byte array to send over the network
+    public byte[] toByteArray() {
+        return handshakeByteArray.clone();
+    }
+    //Create a Handshake object from received byte array
+    public static Handshake fromByteArray(byte[] byteArray) {
+        return new Handshake(byteArray);
     }
 
     //for debugging purposes:

@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.logging.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Handler;
 
 public class Logs {
     private static Logger logger = Logger.getLogger(Logs.class.getName());

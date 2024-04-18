@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 public class PeerData {
 
+    private String peerID;
     public boolean interested;
     private boolean optimallyUnchoked;
     private boolean preferred;
@@ -62,7 +63,7 @@ public class PeerData {
     }
 
     //check the all the peers have the bitfield filled with ones which means that they all have the complete file
-    public static boolean canTerminate() throws IOException {
+    public boolean canTerminate() throws IOException {
         boolean canEnd = true;
         //check the map with all the peers and their bitfields
         Map<String, byte[]> allBitfields = new HashMap<>();

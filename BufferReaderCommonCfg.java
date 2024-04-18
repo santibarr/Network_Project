@@ -64,19 +64,19 @@ public class BufferReaderCommonCfg{
                 numberOfPreferredNeighbors = Integer.parseInt(nameAndinfo[1]);
             }
             else if(nameAndinfo[0].equals("UnchokingInterval")) {
-                unchokingInterval= Integer.parseInt(nameAndinfo[2]);
+                unchokingInterval= Integer.parseInt(nameAndinfo[1]);
             }
             else if(nameAndinfo[0].equals("OptimisticUnchokingInterval")){
-                optimisticUnchokingInterval= Integer.parseInt(nameAndinfo[2]);
+                optimisticUnchokingInterval= Integer.parseInt(nameAndinfo[1]);
             }
             else if(nameAndinfo[0].equals("FileName")){
-                fileName = nameAndinfo[2];
+                fileName = nameAndinfo[1];
             }
             else if(nameAndinfo[0].equals("FileSize")){
-                fileSize = Integer.parseInt(nameAndinfo[2]);
+                fileSize = Integer.parseInt(nameAndinfo[1]);
             }
             else if(nameAndinfo[0].equals("PieceSize")){
-                pieceSize = Integer.parseInt(nameAndinfo[2]);
+                pieceSize = Integer.parseInt(nameAndinfo[1]);
             }
             else{
                 continue;
