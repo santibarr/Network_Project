@@ -1,10 +1,8 @@
-package Messages;//Each bit in the bitfield payload represents whether the peer has the corresponding piece or not. The
-//first byte of the bitfield corresponds to piece indices 0 – 7 from high bit to low bit,
-//respectively. The next one corresponds to piece indices 8 – 15, etc. Spare bits at the end
-//are set to zero. Peers that don’t have anything yet may skip a ‘bitfield’ message.
+
 
 import java.io.IOException;
 import java.util.*;
+
 
 public class BitFieldMessage {
     // i want to convert the byte to integer to see the piece that the bitfield is representing
