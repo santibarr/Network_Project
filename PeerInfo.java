@@ -7,13 +7,13 @@
  * It is your responsibility to adapt this program to your running environment.
  */
 
-public class RemotePeerInfo {
+public class PeerInfo {
 	public String peerId;
 	public String peerAddress;
 	public String peerPort;
 	public String peerHasFile;
 	
-	public RemotePeerInfo(String pId, String pAddress, String pPort, String hasFile) {
+	public PeerInfo(String pId, String pAddress, String pPort, String hasFile) {
 		peerId = pId;
 		peerAddress = pAddress;
 		peerPort = pPort;
