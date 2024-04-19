@@ -65,7 +65,7 @@ public class Peer {
         this.finished = false;
     }
 
-    public setUpPeer() throws IOException {
+    public void setUpPeer() throws IOException {
         //set up file and directory
         String filePath = "peer_" + this.peerInfo.peerId;
         File file = new File(filePath);
