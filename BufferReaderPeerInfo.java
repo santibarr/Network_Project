@@ -9,14 +9,18 @@ public class BufferReaderPeerInfo {
     public static PeerInfo reader() throws IOException {
         BufferedReader brIn = new BufferedReader(new FileReader("PeerInfo.cfg"));
         String line;
+        String pId = null;
+        String pAddress = null;
+        String pPort = null;
+        String hasfile = null;
         while ((line = brIn.readLine()) != null) {
             String[] peerInfo = line.split(" ");
-            String pId = peerInfo[0];
-            String pAddress = peerInfo[1];
-            String pPort = peerInfo[2];
-            String hasfile = peerInfo[3];
-            PeerInfo rpInfo = new PeerInfo(pId, pAddress, pPort, hasfile);
+            pId = peerInfo[0];
+            pAddress = peerInfo[1];
+            pPort = peerInfo[2];
+            hasfile = peerInfo[3];
         }
+        PeerInfo rpInfo = new PeerInfo(pId, pAddress, pPort, hasfile);
         return rpInfo;
 
     }

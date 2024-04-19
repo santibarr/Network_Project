@@ -37,19 +37,31 @@ public class Peer {
     // - peerAddress
     // - peerPort
 
+    int numPieces; // number of pieces in the file
+    String requestTracker[]; // tracks which pieces have been requested already.
+    // example usage:
+    // if this Peer requests piece 10 to Peer 1006, then requestTracker[10] = "1006"
+    // this denotes the request piece 10 was made to Peer 1006.
+    // if an index is null, then that piece has not been requested yet.
     public HashSet<String> connectedPeers;
+
+    boolean finished;
 
     // constructor to initialize the peerObject.
     public Peer () throws IOException {
-
         //read in config files and peer info files
-
         this.peerConfig = BufferReaderCommonCfg.reader();
         this.peerInfo = BufferReaderPeerInfo.reader();
 
         // set up additional structures that will be maintained by the peer
         this.connectedPeers = new HashSet<>();
-        //... additional variables.
+        this.numPieces = (int) Math.ceil((double) this.peerConfig.getFileSize() / this.peerConfig.getPieceSize());
+        this.requestTracker = new String[this.numPieces]; // each index corresponds to a piece.
+        this.finished = false;
+    }
+
+    public setUpPeer()
+    {
 
     }
 
