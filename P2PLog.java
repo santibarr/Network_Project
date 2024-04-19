@@ -120,6 +120,7 @@ public class P2PLog {
         this.logger.log(Level.INFO, message);
     }
 
+    //shut down the logger
     public synchronized void shutdownLogger(){
         //if there is stuff written to the handler, close it
         if(this.logHandler != null){
