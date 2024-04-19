@@ -120,6 +120,13 @@ public class P2PLog {
         this.logger.log(Level.INFO, message);
     }
 
+    public synchronized void shutdownLogger(){
+        //if there is stuff written to the handler, close it
+        if(this.logHandler != null){
+            this.logHandler.close();
+        }
+    }
+
     //Helper method that gets the current time
     private synchronized String getcurrentTime(){
 
