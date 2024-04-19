@@ -27,6 +27,7 @@ public class PeerConnection implements Runnable{
     public String peerIDother;
     public Handshake handshake;
 
+    public P2PLog logger;
     public Peer hostPeer;
 
     public PeerConnection(Peer hostPeer, Socket socketConnection){
@@ -60,6 +61,7 @@ public class PeerConnection implements Runnable{
                 Handshake handshakeCheck = new Handshake(returnedMessage);
                 this.peerIDother = handshakeCheck.peerId;
                 //add it to the logger
+                logger.logTCPreceive(this.peerIDother);
                 break;
             }
 

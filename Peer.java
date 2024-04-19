@@ -41,6 +41,7 @@ public class Peer {
     // - peerId
     // - peerAddress
     // - peerPort
+    // - hasFile
 
     int numPieces; // number of pieces in the file
     String requestTracker[]; // tracks which pieces have been requested already.
