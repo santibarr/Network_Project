@@ -128,6 +128,7 @@ public class Peer {
 
     public static void main(String[] args) throws IOException {
         Peer peer = new Peer("1001");
+        peer.setUpPeer();
         System.out.println(peer.peerConfig.getFileName());
         //System.out.println(peer.peerInfo.getPeerId());
     }

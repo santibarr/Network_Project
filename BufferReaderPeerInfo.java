@@ -7,8 +7,8 @@ import java.util.TreeMap;
 import java.util.Vector;
 public class BufferReaderPeerInfo {
 
-    public static SortedMap<String, PeerInfo> peerMap; // keeps the peerIDs plus their PeerInfo
-    public static HashSet<String> allPeers; // keeps the peerIDs
+    public static SortedMap<String, PeerInfo> peerMap = new TreeMap<>(); // keeps the peerIDs plus their PeerInfo
+    public static HashSet<String> allPeers = new HashSet<>(); // keeps the peerIDs
 
 
     public static SortedMap<String, PeerInfo> reader() throws IOException {
@@ -19,6 +19,7 @@ public class BufferReaderPeerInfo {
         String pPort = null;
         String hasfile = null;
 
+
         while ((line = brIn.readLine()) != null) {
 
             String[] peerInfo = line.split(" ");
@@ -27,7 +28,7 @@ public class BufferReaderPeerInfo {
             pPort = peerInfo[2];
             hasfile = peerInfo[3];
             PeerInfo rpInfo = new PeerInfo(pId, pAddress, pPort, hasfile);
-            allPeers.add(rpInfo.peerId);
+            allPeers.add(pId);
             peerMap.put(rpInfo.peerId, rpInfo);
         }
         return peerMap;
