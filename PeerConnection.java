@@ -20,18 +20,32 @@ import java.net.Socket;
 
  */
 public class PeerConnection implements Runnable{
-    private Socket socketConnection;
-    private ObjectInputStream inputStr;
-    private ObjectOutputStream outputStr;
-    private String peerID;
-    private String peerIDother;
-    private Handshake handshake;
-    public void run() {
-        try {
+    public Socket socketConnection;
+    public ObjectInputStream inputStr;
+    public ObjectOutputStream outputStr;
+    public String peerID;
+    public String peerIDother;
+    public Handshake handshake;
+
+    public Peer hostPeer;
+
+    public PeerConnection(Peer hostPeer, Socket socketConnection){
+        this.socketConnection = socketConnection;
+        this.hostPeer = hostPeer;
+
+        try{
             outputStr = new ObjectOutputStream(socketConnection.getOutputStream());
             outputStr.flush();
             inputStr = new ObjectInputStream(socketConnection.getInputStream());
+        }
+        catch (IOException e){
+            throw new RuntimeException(e);
+        }
 
+    }
+
+    public void run() {
+        try {
             //here we have to send the handshake
             byte[] handshakeByte = new byte[32];
             this.handshake = new Handshake(peerID);
