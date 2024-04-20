@@ -76,6 +76,8 @@ public class Peer {
 
 
         this.finished = false;
+
+        setUpPeer();
     }
 
     public void setUpPeer() throws IOException {
@@ -102,43 +104,47 @@ public class Peer {
         peerServer = new PeerServer(peerInfo, peerConfig);
 
         //connect to the neighbors
-        try {
-            Thread.sleep(5000); //temporary sleep to allow all peers to start
-            for (String peerIdInNetwork : peersInNetwork) {
-                if (!peerIdInNetwork.equals(peerInfo.peerId)) {
-                    //skip connection to self:
+        System.out.println("Trying to connect to peers...");
+        while (connectedPeers.size() < 2) { //trying to get a connection between two different peers right not
+            //DELETE ^ Later
+            try {
+                Thread.sleep(5000); //temporary sleep to allow all peers to start
+                for (String peerIdInNetwork : peersInNetwork) {
+                    if (!peerIdInNetwork.equals(peerInfo.peerId)) {
+                        //skip connection to self:
 
-                    // establish connection with each peer in the network
-                    // Each Peer will have n-1 PeerConnections (where n is the number of peers in the network)
-                    Socket interPeerSocket = new Socket(peerInfo.peerAddress, Integer.parseInt(peerInfo.peerPort));
-                    PeerConnection peerConnection = new PeerConnection(this, interPeerSocket);
+                        // establish connection with each peer in the network
+                        // Each Peer will have n-1 PeerConnections (where n is the number of peers in the network)
+                        Socket interPeerSocket = new Socket(peerInfo.peerAddress, Integer.parseInt(peerInfo.peerPort));
+                        PeerConnection peerConnection = new PeerConnection(this, interPeerSocket);
 
-                    // set the other peer's ID
-                    peerConnection.otherPeerID = peerIdInNetwork; // make sure that this peerId is the
-                    // add the peerConnection to the connectedPeers set
-                    connectedPeers.put(peerIdInNetwork, peerConnection);
-                    // start the thread for the peerConnection
-                    // a thread must be started for each peer connection to run in parallel
-                    Thread peerConnectionThread = new Thread(peerConnection);
-                    peerConnectionThread.start();
+                        // set the other peer's ID
+                        peerConnection.otherPeerID = peerIdInNetwork; // make sure that this peerId is the
+                        // add the peerConnection to the connectedPeers set
+                        connectedPeers.put(peerIdInNetwork, peerConnection);
+                        // start the thread for the peerConnection
+                        // a thread must be started for each peer connection to run in parallel
+                        Thread peerConnectionThread = new Thread(peerConnection);
+                        peerConnectionThread.start();
 
+                        System.out.println("Peer " + peerInfo.peerId + " is connected to Peer " + peerIdInNetwork);
 
-                    // NEED TO DEFINE MORE METHODS FOR PEER PROCESS
-
+                        // DON'T CONTINUE UNTIL WE FIGURE OUT THE CONNECTION BETWEEN PEERS LOCALLY
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
     }
 
-    public static void main(String[] args) throws IOException {
-        Peer peer = new Peer("1001");
-        peer.setUpPeer();
-        System.out.println(peer.peerConfig.getFileName());
-        //System.out.println(peer.peerInfo.getPeerId());
-    }
+//    public static void main(String[] args) throws IOException {
+//        Peer peer = new Peer("1001");
+//        peer.setUpPeer();
+//        System.out.println(peer.peerConfig.getFileName());
+//        //System.out.println(peer.peerInfo.getPeerId());
+//    }
 }
 
 

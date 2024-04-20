@@ -13,6 +13,8 @@ public class PeerServer implements Runnable{
         //constructor for the PeerServer class
         //creates a new server and socket for the peer
         peerSocket = new ServerSocket (Integer.parseInt(peerInfo.peerPort));
+
+        System.out.println("Peer " + peerInfo.peerId + " is listening on port " + peerInfo.peerPort);
     }
 
     public void run() {
