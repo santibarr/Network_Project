@@ -24,7 +24,7 @@ public class PeerConnection implements Runnable{
     public ObjectInputStream inputStr;
     public ObjectOutputStream outputStr;
     public String peerID;
-    public String peerIDother;
+    public String otherPeerID;
     public Handshake handshake;
 
     public P2PLog logger;
@@ -59,9 +59,9 @@ public class PeerConnection implements Runnable{
                 inputStr.readFully(returnedMessage);
                 //now we have to check that the handshake is correct
                 Handshake handshakeCheck = new Handshake(returnedMessage);
-                this.peerIDother = handshakeCheck.peerId;
+                this.otherPeerID = handshakeCheck.peerId;
                 //add it to the logger
-                logger.logTCPreceive(this.peerIDother);
+                logger.logTCPreceive(this.otherPeerID);
                 break;
             }
 
