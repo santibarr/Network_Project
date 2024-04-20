@@ -60,6 +60,8 @@ public class Peer {
 
     boolean finished;
 
+    public HashMap<String, Thread> threadMap;
+
     // constructor to initialize the peerObject.
     public Peer (String pId) throws IOException {
         //read in config files and peer info files
@@ -73,6 +75,7 @@ public class Peer {
         this.requestTracker = new String[this.numPieces]; // each index corresponds to a piece.
         this.fileBuilder = null;
         this.peerServer = null;
+        this.threadMap = new HashMap<>();
 
 
         this.finished = false;
@@ -125,7 +128,9 @@ public class Peer {
                         // start the thread for the peerConnection
                         // a thread must be started for each peer connection to run in parallel
                         Thread peerConnectionThread = new Thread(peerConnection);
-                        peerConnectionThread.start();
+                        // need a map to make sure which thread refers to which peer connection
+                        threadMap.put(peerIdInNetwork, peerConnectionThread);
+                        threadMap.get(peerIdInNetwork).start();
 
                         System.out.println("Peer " + peerInfo.peerId + " is connected to Peer " + peerIdInNetwork);
 
@@ -145,6 +150,6 @@ public class Peer {
 //        System.out.println(peer.peerConfig.getFileName());
 //        //System.out.println(peer.peerInfo.getPeerId());
 //    }
-}
+//}
 
 
