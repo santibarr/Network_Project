@@ -78,4 +78,8 @@ public class Message {
         bits = BitSet.valueOf(this.payload);
         return bits;
     }
+
+    public char getType(){
+        return this.type;
+    }
 }

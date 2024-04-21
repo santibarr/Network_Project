@@ -87,6 +87,7 @@ public class Peer {
         this.fileBuilder = null;
         this.peerServer = null;
         this.threadMap = new HashMap<>();
+        this.bitfieldMap = new HashMap<>();
 
         this.finished = false;
 
@@ -117,12 +118,15 @@ public class Peer {
            // Creating BitSet for the bitfield to track the pieces of the file each peer holds
            BitSet bitfield = new BitSet(numPieces);
            String peerId = peerIds[i];
-              // if the peer has the file, set all bits to 1
-                if (peerInfo.peerHasFile.equals("1")) {
-                    bitfield.set(0, numPieces); // set all bits to 1 since the peer has the file
+              // if the peer has the file, set all bits the corresponding index
+                if (allPeerInfoMap.get(peerId).peerHasFile.equals("1")) {
+                    //sets each index to the number of the piece index
+                    // therefore all the numbers in the array are the available pieces
+                    bitfield.set(0, numPieces);
                     this.bitfieldMap.put(peerId, bitfield); // the corresponding bitfield with the peerId
                 }
                 else{
+                    //the bitfield array is empty because
                     bitfield.clear(); // set all bits to 0 since the peer does not have the file
                     this.bitfieldMap.put(peerId, bitfield); // the corresponding bitfield with the peerId
                 }
