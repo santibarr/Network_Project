@@ -68,6 +68,8 @@ public class Peer {
     //logger
     P2PLog logger;
 
+    public HashMap<String, BitSet> bitfieldMap;
+
     // constructor to initialize the peerObject.
     public Peer (String pId) throws IOException {
         //read in config files and peer info files
@@ -110,6 +112,21 @@ public class Peer {
 
         //initialize the bitfield
         //make a helper method to fill our peer's bitfield
+      String[] peerIds = peersInNetwork.toArray(new String[0]);
+       for(int i = 0; i < peerIds.length; i++){
+           // Creating BitSet for the bitfield to track the pieces of the file each peer holds
+           BitSet bitfield = new BitSet(numPieces);
+           String peerId = peerIds[i];
+              // if the peer has the file, set all bits to 1
+                if (peerInfo.peerHasFile.equals("1")) {
+                    bitfield.set(0, numPieces); // set all bits to 1 since the peer has the file
+                    this.bitfieldMap.put(peerId, bitfield); // the corresponding bitfield with the peerId
+                }
+                else{
+                    bitfield.clear(); // set all bits to 0 since the peer does not have the file
+                    this.bitfieldMap.put(peerId, bitfield); // the corresponding bitfield with the peerId
+                }
+       }
 
         //initialize the server
         peerServer = new PeerServer(peerInfo, this);
@@ -126,8 +143,6 @@ public class Peer {
 
         //connect to the neighbors
         System.out.println("Trying to connect to peers...");
-        while (connectedPeers.size() < 2) { //trying to get a connection between two different peers right not
-            //DELETE ^ Later
             try {
 //                Thread.sleep(5000); //temporary sleep to allow all peers to start
                 for (String peerIdInNetwork : peersInNetwork) {
@@ -155,12 +170,15 @@ public class Peer {
                         System.out.println("Peer " + peerInfo.peerId + " is connected to Peer " + peerIdInNetwork);
 
                         // DON'T CONTINUE UNTIL WE FIGURE OUT THE CONNECTION BETWEEN PEERS LOCALLY
+                    } else {
+                        break;
                     }
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+
 
     }
 
