@@ -50,7 +50,7 @@ public class P2PLog {
 
     //log when peer receives TCP message
     public synchronized void logTCPreceive(String peer){
-        String message = String.format("%s: Peer %s is receiving a connection from %s", getcurrentTime(), this.peerId, peer);
+        String message = String.format("%s: Peer %s is receiving a connection from %s", getcurrentTime(), peer, this.peerId);
         this.logger.log(Level.INFO, message);
     }
 

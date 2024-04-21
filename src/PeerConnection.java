@@ -28,6 +28,7 @@ public class PeerConnection implements Runnable{
     public Handshake handshake;
 
     private boolean connected = false;
+    private boolean start = false;
 
     public Peer hostPeer;
 
@@ -58,6 +59,8 @@ public class PeerConnection implements Runnable{
         this.peerID = hostPeer.peerInfo.peerId;
         this.otherPeerID = otherPeerID;
 
+        this.start = true; // change it to somewhere if this fails
+
         try{
             // Check if the socket is connected
             if (!socketConnection.isConnected()) {
@@ -86,15 +89,26 @@ public class PeerConnection implements Runnable{
             outputStr.flush();
             hostPeer.getLog().logTCPsend(otherPeerID);
 
-            if(!this.connected){
+            if(!this.connected) {
                 // Wait for the handshake response
                 byte[] returnedMessage = new byte[32];
                 inputStr.readFully(returnedMessage);
 
-                // Check the handshake response
-                Handshake handshakeCheck = new Handshake(returnedMessage);
-                this.otherPeerID = handshakeCheck.peerId;
-                hostPeer.getLog().logTCPreceive(otherPeerID);
+
+                //process the handshake
+                this.handshake.ReceiveHandshake(returnedMessage);
+                this.otherPeerID = this.handshake.peerId;
+                this.hostPeer.connectedPeers.put(this.otherPeerID, this);
+                this.hostPeer.threadMap.put(this.otherPeerID,Thread.currentThread());
+                this.connected = true;
+
+                if(this.start){
+                    this.hostPeer.getLog().logTCPsend(this.otherPeerID);
+                }
+                else{
+                    this.hostPeer.getLog().logTCPreceive(this.otherPeerID);
+                }
+
             }
             else{
 
