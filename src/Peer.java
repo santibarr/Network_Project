@@ -108,7 +108,7 @@ public class Peer {
         //make a helper method to fill our peer's bitfield
 
         //initialize the server
-        peerServer = new PeerServer(peerInfo, peerConfig);
+        peerServer = new PeerServer(peerInfo, this);
 
         // Start the server in a new thread
         new Thread(() -> {

@@ -20,10 +20,10 @@ import java.net.Socket;
 
  */
 public class PeerConnection implements Runnable{
-    public Socket socketConnection;
-    public ObjectInputStream inputStr;
-    public ObjectOutputStream outputStr;
-    public String peerID;
+    private Socket socketConnection;
+    private ObjectInputStream inputStr;
+    private ObjectOutputStream outputStr;
+    private String peerID;
     public String otherPeerID;
     public Handshake handshake;
 
