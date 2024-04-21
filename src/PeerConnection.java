@@ -58,7 +58,7 @@ public class PeerConnection implements Runnable{
             //here we have to send the handshake
             byte[] handshakeByte;
             this.handshake = new Handshake(peerID);
-            handshakeByte = this.handshake.toByteArray();
+            handshakeByte = this.handshake.MakeHandshake();
             outputStr.write(handshakeByte);
             outputStr.flush();
 
