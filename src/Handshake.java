@@ -22,7 +22,7 @@ public class Handshake {
     //construct a Handhsake message with the peerID
     public Handshake(String peerId) {
         this.peerId = peerId;
-        this.handshakeByteArray = MakeHandshake();
+        //this.handshakeByteArray = MakeHandshake();
     }
 
     // find peerId from the handshake message

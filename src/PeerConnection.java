@@ -20,10 +20,10 @@ import java.net.Socket;
 
  */
 public class PeerConnection implements Runnable{
-    private Socket socketConnection;
-    private ObjectInputStream inputStr = null;
-    private ObjectOutputStream outputStr = null;
-    private String peerID;
+    public Socket socketConnection;
+    public ObjectInputStream inputStr = null;
+    public ObjectOutputStream outputStr = null;
+    public String peerID;
     public String otherPeerID;
     public Handshake handshake;
 
@@ -34,6 +34,7 @@ public class PeerConnection implements Runnable{
     public PeerConnection(Peer hostPeer, Socket socketConnection){
         this.socketConnection = socketConnection;
         this.hostPeer = hostPeer;
+        this.peerID = hostPeer.peerInfo.peerId;
 
         try{
             // Check if the socket is connected
@@ -56,8 +57,9 @@ public class PeerConnection implements Runnable{
 
             //here we have to send the handshake
             byte[] handshakeByte;
-            this.handshake = new Handshake(peerID);
+            this.handshake = new Handshake(otherPeerID);
             handshakeByte = this.handshake.MakeHandshake();
+
             outputStr.write(handshakeByte);
             outputStr.flush();
             hostPeer.getLog().logTCPsend(peerID);
@@ -70,7 +72,7 @@ public class PeerConnection implements Runnable{
                 // Check the handshake response
                 Handshake handshakeCheck = new Handshake(returnedMessage);
                 this.otherPeerID = handshakeCheck.peerId;
-                hostPeer.getLog().logTCPreceive(this.otherPeerID);
+                hostPeer.getLog().logTCPreceive(otherPeerID);
             }
             else{
 
