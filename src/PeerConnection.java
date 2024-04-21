@@ -35,9 +35,14 @@ public class PeerConnection implements Runnable{
         this.hostPeer = hostPeer;
 
         try{
+            // Check if the socket is connected
+            if (!socketConnection.isConnected()) {
+                throw new IOException("Failed to establish connection with the server");
+            }
             outputStr = new ObjectOutputStream(socketConnection.getOutputStream());
             outputStr.flush();
             inputStr = new ObjectInputStream(socketConnection.getInputStream());
+
         }
         catch (IOException e){
             throw new RuntimeException(e);
@@ -47,6 +52,7 @@ public class PeerConnection implements Runnable{
 
     public void run() {
         try {
+
             //here we have to send the handshake
             byte[] handshakeByte = new byte[32];
             this.handshake = new Handshake(peerID);
@@ -54,16 +60,20 @@ public class PeerConnection implements Runnable{
             outputStr.write(handshakeByte);
             outputStr.flush();
 
-            while (true){
-                byte[] returnedMessage = new byte[32];
-                inputStr.readFully(returnedMessage);
-                //now we have to check that the handshake is correct
-                Handshake handshakeCheck = new Handshake(returnedMessage);
-                this.otherPeerID = handshakeCheck.peerId;
-                //add it to the logger
-                logger.logTCPreceive(this.otherPeerID);
-                break;
-            }
+            // Wait for the handshake response
+            byte[] returnedMessage = new byte[32];
+            inputStr.readFully(returnedMessage);
+
+            // Check the handshake response
+            Handshake handshakeCheck = new Handshake(returnedMessage);
+            this.otherPeerID = handshakeCheck.peerId;
+
+            // Log the successful TCP connection
+            logger.logTCPreceive(this.otherPeerID);
+
+            // Now that the handshake is complete, you can start the actual communication
+            // For example, you can start by sending a 'have' message to the other peer
+            // You can also start listening for incoming messages from the other peer
 
         } catch (IOException e) {
             throw new RuntimeException(e);

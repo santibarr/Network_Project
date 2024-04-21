@@ -47,10 +47,13 @@ public class Peer {
     // this denotes the request piece 10 was made to Peer 1006.
     // if an index is null, then that piece has not been requested yet.
 
-    public HashSet<String> peersInNetwork; // set of all peers (peerId's) in the network
+    public TreeSet<String> peersInNetwork; // set of all peers (peerId's) in the network
     public HashMap<String, PeerConnection> connectedPeers; // map of connected peers
     // key: peerId, value: PeerConnection object.
     // Each Peer will have n-1 PeerConnections (where n is the number of peers in the network)
+
+    public SortedMap<String, PeerInfo> allPeerInfoMap; // map of all peerr's PeerInfo
+    // key: peerId, value: PeerInfo object.
 
     public RandomAccessFile fileBuilder; // file object to read and write the file
     // RandomAccessFile allows writes and reads to be made at any position in the file
@@ -66,8 +69,9 @@ public class Peer {
     public Peer (String pId) throws IOException {
         //read in config files and peer info files
         this.peerConfig = BufferReaderCommonCfg.reader();
-        this.peerInfo = BufferReaderPeerInfo.reader().get(pId);
-        this.peersInNetwork = new HashSet<>(BufferReaderPeerInfo.allPeers);
+        this.allPeerInfoMap = BufferReaderPeerInfo.reader();
+        this.peerInfo = allPeerInfoMap.get(pId);
+        this.peersInNetwork = new TreeSet<>(BufferReaderPeerInfo.allPeers);
 
         // set up additional structures that will be maintained by the peer
         this.connectedPeers = new HashMap<>();
@@ -106,19 +110,31 @@ public class Peer {
         //initialize the server
         peerServer = new PeerServer(peerInfo, peerConfig);
 
+        // Start the server in a new thread
+        new Thread(() -> {
+            try {
+                peerServer.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+
         //connect to the neighbors
         System.out.println("Trying to connect to peers...");
         while (connectedPeers.size() < 2) { //trying to get a connection between two different peers right not
             //DELETE ^ Later
             try {
-                Thread.sleep(5000); //temporary sleep to allow all peers to start
+//                Thread.sleep(5000); //temporary sleep to allow all peers to start
                 for (String peerIdInNetwork : peersInNetwork) {
                     if (!peerIdInNetwork.equals(peerInfo.peerId)) {
                         //skip connection to self:
+                        System.out.println("Trying to connect to Peer " + peerIdInNetwork);
 
                         // establish connection with each peer in the network
                         // Each Peer will have n-1 PeerConnections (where n is the number of peers in the network)
-                        Socket interPeerSocket = new Socket(peerInfo.peerAddress, Integer.parseInt(peerInfo.peerPort));
+                        int otherPeerPort = Integer.parseInt(allPeerInfoMap.get(peerIdInNetwork).peerPort);
+                        Socket interPeerSocket = new Socket(peerInfo.peerAddress, otherPeerPort);
                         PeerConnection peerConnection = new PeerConnection(this, interPeerSocket);
 
                         // set the other peer's ID

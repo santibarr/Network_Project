@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Vector;
+import java.util.TreeSet;
 public class BufferReaderPeerInfo {
 
     public static SortedMap<String, PeerInfo> peerMap = new TreeMap<>(); // keeps the peerIDs plus their PeerInfo
-    public static HashSet<String> allPeers = new HashSet<>(); // keeps the peerIDs
+    public static TreeSet<String> allPeers = new TreeSet<>(); // keeps the peerIDs
 
 
     public static SortedMap<String, PeerInfo> reader() throws IOException {
@@ -31,6 +31,8 @@ public class BufferReaderPeerInfo {
             allPeers.add(pId);
             peerMap.put(rpInfo.peerId, rpInfo);
         }
+
+
         return peerMap;
 
     }
