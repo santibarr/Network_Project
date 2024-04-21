@@ -26,12 +26,11 @@ public class Handshake {
     }
 
     // find peerId from the handshake message
-    public Handshake(byte[] handshakeByteArray) {
+    public void ReceiveHandshake(byte[] handshakeByteArray) {
         this.handshakeByteArray = handshakeByteArray;
         String temp = new String(handshakeByteArray, StandardCharsets.UTF_8);
-        this.peerId = temp.substring(28,32); //last 4 bytes correspond to the peerId's
+        this.peerId = temp.substring(28, 32); //last 4 bytes correspond to the peerId's
     }
-
     //construct a Handshake byte array
     public byte[] MakeHandshake() {
         ByteArrayOutputStream handshakeBuilder = new ByteArrayOutputStream();

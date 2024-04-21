@@ -29,7 +29,7 @@ public class PeerServer implements Runnable{
                 Socket peerSocket = this.peerSocket.accept();
 
                 //additional code to crete thread and Peer Handler
-               PeerConnection peerConn =  new PeerConnection(this.peer,peerSocket);
+               PeerConnection peerConn =  new PeerConnection(this.peer, peerSocket);
 
                new Thread(peerConn).start();
 

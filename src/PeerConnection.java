@@ -52,6 +52,28 @@ public class PeerConnection implements Runnable{
 
     }
 
+    public PeerConnection(Peer hostPeer, Socket socketConnection, String otherPeerID){
+        this.socketConnection = socketConnection;
+        this.hostPeer = hostPeer;
+        this.peerID = hostPeer.peerInfo.peerId;
+        this.otherPeerID = otherPeerID;
+
+        try{
+            // Check if the socket is connected
+            if (!socketConnection.isConnected()) {
+                throw new IOException("Failed to establish connection with the server");
+            }
+            outputStr = new ObjectOutputStream(socketConnection.getOutputStream());
+            outputStr.flush();
+            inputStr = new ObjectInputStream(socketConnection.getInputStream());
+
+        }
+        catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public void run() {
         try {
 
@@ -62,7 +84,7 @@ public class PeerConnection implements Runnable{
 
             outputStr.write(handshakeByte);
             outputStr.flush();
-            hostPeer.getLog().logTCPsend(peerID);
+            hostPeer.getLog().logTCPsend(otherPeerID);
 
             if(!this.connected){
                 // Wait for the handshake response

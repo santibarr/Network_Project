@@ -12,7 +12,7 @@ public class BufferReaderPeerInfo {
 
 
     public static SortedMap<String, PeerInfo> reader() throws IOException {
-        BufferedReader brIn = new BufferedReader(new FileReader("src/PeerInfo.cfg"));
+        BufferedReader brIn = new BufferedReader(new FileReader("/Users/pedrocamargo/Desktop/Spring24/Networking Fundamentals/P2P/Network_Project/src/PeerInfo.cfg"));
         String line;
         String pId = null;
         String pAddress = null;

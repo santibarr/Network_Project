@@ -158,10 +158,8 @@ public class Peer {
                         // Each Peer will have n-1 PeerConnections (where n is the number of peers in the network)
                         int otherPeerPort = Integer.parseInt(allPeerInfoMap.get(peerIdInNetwork).peerPort);
                         Socket interPeerSocket = new Socket(peerInfo.peerAddress, otherPeerPort);
-                        PeerConnection peerConnection = new PeerConnection(this, interPeerSocket);
-
-                        // set the other peer's ID
-                        peerConnection.otherPeerID = peerIdInNetwork; // make sure that this peerId is the
+                        PeerConnection peerConnection = new PeerConnection(this, interPeerSocket, peerIdInNetwork);
+                        
                         // add the peerConnection to the connectedPeers set
                         connectedPeers.put(peerIdInNetwork, peerConnection);
                         // start the thread for the peerConnection
