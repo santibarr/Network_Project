@@ -17,7 +17,7 @@ public class P2PLog {
     private Logger logger = null; //set the logger to log messages
 
     //We get the ID of the peer and we kick off the logging process for that peer
-    public void setPeerLogging(String id){
+    public P2PLog(String id){
         this.peerId = id;
         startup();
     }

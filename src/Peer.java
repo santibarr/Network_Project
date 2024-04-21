@@ -65,6 +65,9 @@ public class Peer {
 
     public HashMap<String, Thread> threadMap;
 
+    //logger
+    P2PLog logger;
+
     // constructor to initialize the peerObject.
     public Peer (String pId) throws IOException {
         //read in config files and peer info files
@@ -73,6 +76,8 @@ public class Peer {
         this.peerInfo = allPeerInfoMap.get(pId);
         this.peersInNetwork = new TreeSet<>(BufferReaderPeerInfo.allPeers);
 
+        //start logger for peer
+        this.logger = new P2PLog(pId);
         // set up additional structures that will be maintained by the peer
         this.connectedPeers = new HashMap<>();
         this.numPieces = (int) Math.ceil((double) this.peerConfig.getFileSize() / this.peerConfig.getPieceSize());
@@ -80,7 +85,6 @@ public class Peer {
         this.fileBuilder = null;
         this.peerServer = null;
         this.threadMap = new HashMap<>();
-
 
         this.finished = false;
 
