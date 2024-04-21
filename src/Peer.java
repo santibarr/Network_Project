@@ -182,6 +182,10 @@ public class Peer {
 
     }
 
+    public P2PLog getLog(){
+        return this.logger;
+    }
+
 //    public static void main(String[] args) throws IOException {
 //        Peer peer = new Peer("1001");
 //        peer.setUpPeer();
