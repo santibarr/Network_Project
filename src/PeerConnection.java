@@ -29,7 +29,6 @@ public class PeerConnection implements Runnable{
 
     private boolean connected = false;
 
-    public P2PLog logger;
     public Peer hostPeer;
 
     public PeerConnection(Peer hostPeer, Socket socketConnection){
@@ -61,6 +60,7 @@ public class PeerConnection implements Runnable{
             handshakeByte = this.handshake.MakeHandshake();
             outputStr.write(handshakeByte);
             outputStr.flush();
+            hostPeer.getLog().logTCPsend(peerID);
 
             if(!this.connected){
                 // Wait for the handshake response
@@ -70,6 +70,7 @@ public class PeerConnection implements Runnable{
                 // Check the handshake response
                 Handshake handshakeCheck = new Handshake(returnedMessage);
                 this.otherPeerID = handshakeCheck.peerId;
+                hostPeer.getLog().logTCPreceive(this.otherPeerID);
             }
             else{
 
