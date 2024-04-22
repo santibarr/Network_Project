@@ -160,7 +160,7 @@ public class PeerConnection implements Runnable{
                     }
                 } else {
                     //process incoming messages
-                    while (inputStr.available() < 3){ //wait until the input stream has at least 4 bytes
+                    while (inputStr.available() <=4 ){ //wait until the input stream has at least 4 bytes
                         try {
                             Thread.sleep(100); // don't know if this is an appropriate time to wait
                             // experiment with different times if necessary
@@ -181,14 +181,12 @@ public class PeerConnection implements Runnable{
                     //inputStr.readFully(resp); //read the message from the input stream
                     char type = (char) messageType; //message type is the first byte
 
-                    //based on the response we get, we will build a new message
-                    Message msg = new Message(type);
-                    msg.length = messageSize;
-                    msg.type = type;
                     //now obtain the response
                     byte[] response = new byte[messageSize];
                     inputStr.readFully(response);
-                    msg.payload = response;
+
+                    //based on the response we get, we will build a new message
+                    Message msg = new Message(messageSize,type,response);
 
                     //sort everything into its place based on message type
                     switch (type) {

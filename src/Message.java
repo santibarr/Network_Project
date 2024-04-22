@@ -26,6 +26,11 @@ public class Message {
 
     //we are going to have overloaded Message types
     //This Message will contain: choke, unchoked, interested and uninterested
+    Message(){
+        this.length = 0;
+        this.type = '0';
+        this.payload = new byte[0];
+    }
     Message(char type){
 
         this.length = 1;
@@ -36,6 +41,12 @@ public class Message {
     Message(char type, byte[] payload){
 
         this.length = payload.length + 1;
+        this.type = type;
+        this.payload = payload;
+    }
+    Message(int length, char type, byte[] payload){
+
+        this.length = length;
         this.type = type;
         this.payload = payload;
     }
