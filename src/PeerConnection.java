@@ -226,6 +226,7 @@ public class PeerConnection implements Runnable{
                     //request section
                     else if(type == '6'){
                         System.out.println("this is in case 6");
+                        Request(msg);
                         break;
                     }
                     //piece section
@@ -335,6 +336,18 @@ public class PeerConnection implements Runnable{
                 this.hostPeer.getLog().logUninterestedPeer(this.otherPeerID);
             }
         }
+    }
+
+    public void Request(Message msg){
+
+        int pieceindex = 0;
+        //we want to send a request if we meet these conditions:
+        // the unchoked list has the other peer we are interested in and OptUnchokedPeer is there
+        if(this.hostPeer.unchokedList.contains(this.otherPeerID) || (this.hostPeer.currOptUnchokedId != null && this.hostPeer.currOptUnchokedId.compareTo(this.otherPeerID) == 0)){
+            pieceindex = msg.retrieveIndexFromMsg(msg.payload,0);
+        }
+
+        this.pieceMsg(pieceindex, msg.payload);
     }
 
     public void Piece(Message msg){
@@ -449,4 +462,25 @@ public class PeerConnection implements Runnable{
             e.printStackTrace();
         }
     }
+
+    public void pieceMsg(int pieceBit, byte[] payload){
+
+        try{
+            ByteArrayOutputStream str = new ByteArrayOutputStream();
+            byte[] bytes = ByteBuffer.allocate(4).putInt(pieceBit).array();
+            //construct the msg
+            str.write(bytes);
+            str.write(payload);
+            Message newMsg = new Message('7', str.toByteArray());
+
+            //write the msg to a file and send it
+            this.outputStr.write(newMsg.writeMessage());
+            this.outputStr.flush();
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
