@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.BitSet;
 
 /*
     contains Socket
@@ -113,7 +114,6 @@ public class PeerConnection implements Runnable{
                     byte[] returnedMessage = new byte[32];
                     inputStr.readFully(returnedMessage);
 
-
                     //read in the message to see if the formatting is correct
                     String otherID = null;
                     if (returnedMessage.length != 32) {
@@ -140,14 +140,36 @@ public class PeerConnection implements Runnable{
                         this.hostPeer.getLog().logTCPreceive(this.otherPeerID);
                     }
 
+                    // after establishing connection, send bitfield to other peer
+                    BitSet hostPeerBitfield = hostPeer.bitfieldMap.get(hostPeer.peerInfo.peerId);
+                    if (hostPeer.peerInfo.peerHasFile.equals("1") || hostPeerBitfield.cardinality() > 0) {
+                        try {
+                            Message bitfieldMsg = new Message('5', hostPeerBitfield.toByteArray());
+                            // send the bitfield message
+                            outputStr.write(bitfieldMsg.writeMessage());
+                            outputStr.flush();
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } else {
+                    //process incoming messages
+                    while (inputStr.available() < 4){ //wait until the input stream has at least 4 bytes
+                        try {
+                            Thread.sleep(100); // don't know if this is an appropriate time to wait
+                            // experiment with different times if necessary
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
                     //parse the input and get everything from the response
                     int msgSize = inputStr.readInt();
 
                     byte[] resp = new byte[msgSize];
-                    inputStr.readFully(resp);
-                    char type = (char) resp[0];
+                    inputStr.readFully(resp); //read the message from the input stream
+                    char type = (char) resp[0]; //message type is the first byte
 
                     //based on the response we get, we will build a new message
                     Message msg = new Message(type);
