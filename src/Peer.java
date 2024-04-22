@@ -70,6 +70,18 @@ public class Peer {
 
     public HashMap<String, BitSet> bitfieldMap;
 
+    public String optunchokedpeerS;
+
+    public ArrayList<String> peerList;
+
+    public HashSet<String> unchokedList;
+
+    public HashSet<String> interList;
+
+
+
+
+
     // constructor to initialize the peerObject.
     public Peer (String pId) throws IOException {
         //read in config files and peer info files
