@@ -31,7 +31,7 @@ public class PeerConnection implements Runnable{
     public String peerID;
     public String otherPeerID;
 
-
+    public int downloadrate = 0;
     public boolean hasEnteredConnection = false;
     public boolean start = false;
 
@@ -224,6 +224,7 @@ public class PeerConnection implements Runnable{
                         //piece
                         case '7':
                             System.out.println("this is in case 7");
+                            Piece(msg);
                             break;
                     }
 
@@ -238,6 +239,33 @@ public class PeerConnection implements Runnable{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void Piece(Message msg){
+        try{
+
+            //gather the information necessary
+            int pieceIndex = msg.retrieveIndexFromMsg(msg.payload,0);
+            byte[] pieceData = msg.retrievePiecePayload();
+
+            //write to the file
+            this.hostPeer.writePiece(pieceIndex, pieceData);
+            this.downloadrate++;
+
+            //log it
+            this.hostPeer.getLog().logPieceReceived(this.otherPeerID, pieceIndex, this.hostPeer.numPieces);
+
+            //send the have msg
+            this.hostPeer.updateRequestTracker(pieceIndex, null);
+            this.hostPeer.HaveMessage();
+
+
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     //send the "have" message back to the peer: we need the piece index for that

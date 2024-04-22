@@ -79,7 +79,18 @@ public class Message {
         return bits;
     }
 
-    public char getType(){
-        return this.type;
+    //get index from message byte header
+    public int retrieveIndexFromMsg(byte[] msg, int start){
+        byte[] len = new byte[4];
+        System.arraycopy(msg,start,len,0,4);
+        return ByteBuffer.wrap(len).getInt();
+    }
+
+    //Get the piece from the payload portion of the message
+    public byte[] retrievePiecePayload(){
+        int size = this.length - 5;
+        byte[] piece = new byte[size];
+        System.arraycopy(this.payload,4,piece,0,size);
+        return piece;
     }
 }
