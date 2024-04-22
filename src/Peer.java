@@ -69,8 +69,12 @@ public class Peer {
     P2PLog logger;
 
     public HashMap<String, BitSet> bitfieldMap;
-
-    public String optunchokedpeerS;
+    // key: peerId, value: BitSet object.
+    // bitset object will be used to track which pieces of the file each peer has.
+    public String currOptUnchokedId = null;
+    // peerId corresponding to each peer that is optimistically unchoked
+    public OptUnchoked currOptUnchoked;
+    public Choke currChoke;
 
     public ArrayList<String> peerList;
 
@@ -84,6 +88,7 @@ public class Peer {
 
     // constructor to initialize the peerObject.
     public Peer (String pId) throws IOException {
+        this.finished = false;
         //read in config files and peer info files
         this.peerConfig = BufferReaderCommonCfg.reader();
         this.allPeerInfoMap = BufferReaderPeerInfo.reader();
@@ -92,6 +97,7 @@ public class Peer {
 
         //start logger for peer
         this.logger = new P2PLog(pId);
+
         // set up additional structures that will be maintained by the peer
         this.connectedPeers = new HashMap<>();
         this.numPieces = (int) Math.ceil((double) this.peerConfig.getFileSize() / this.peerConfig.getPieceSize());
@@ -100,10 +106,13 @@ public class Peer {
         this.peerServer = null;
         this.threadMap = new HashMap<>();
         this.bitfieldMap = new HashMap<>();
-
-        this.finished = false;
+        this.unchokedList = new HashSet<>();
+        this.interList = new HashSet<>();
 
         setUpPeer();
+
+        // start choke/unchoke cycle:
+        startChokeUnchokeCycle();
     }
 
     public void setUpPeer() throws IOException {
@@ -196,16 +205,199 @@ public class Peer {
 
     }
 
+    public void startChokeUnchokeCycle(){
+        // start the choke/unchoke cycle
+        this.currChoke = new Choke(this);
+        this.currOptUnchoked = new OptUnchoked(this);
+
+        //TODO:
+        //missing code to terminate the threads and clean up
+
+        currChoke.chokePeriodically();
+        currOptUnchoked.UnchokedPeriodically();
+    }
+
+    public PeerConnection getPeerConnection(String peerId){
+        return connectedPeers.get(peerId);
+    }
+
+
+    // additional peer methods:
+
+    // read and write from/to using the random access file
+    public synchronized byte[] readPiece(int pieceIndex)
+    {
+        // read the piece at the pieceIndex from the file
+        byte[] pieceData = null;
+        try {
+            // account for last piece not being an entire piece
+            if (pieceIndex == numPieces - 1)
+            {
+                // in this case we have to calculate the size of the last piece
+                // since it does not match up to getPieceSize
+                int lastPieceSize = peerConfig.getFileSize() % peerConfig.getPieceSize();
+                pieceData = new byte[lastPieceSize];
+                fileBuilder.seek(pieceIndex * peerConfig.getPieceSize());
+                fileBuilder.read(pieceData);
+            }
+            else
+            {
+                pieceData = new byte[peerConfig.getPieceSize()];
+                fileBuilder.seek(pieceIndex * peerConfig.getPieceSize());
+                fileBuilder.read(pieceData);
+            }
+            return pieceData;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pieceData;
+    }
+
+    public synchronized void writePiece(int pieceIndex, byte[] pieceData) throws IOException {
+        // write the pieceData to the file at the pieceIndex
+        try {
+            fileBuilder.seek(pieceIndex * peerConfig.getPieceSize());
+            fileBuilder.write(pieceData);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void HaveMessage()
+    {
+        // send the have message to all connected peers
+        Set<String> currentPreferredNeighbors = connectedPeers.keySet();
+        for (String peerId : currentPreferredNeighbors)
+        {
+            //TODO: implement sendHaveMessage in PeerConnection
+            // connectedPeers.get(peerId).sendHaveMessage();
+        }
+    }
+
+    //update bitfield after acquiring a new piece
+    public synchronized void updateBitfield(String peerId, int pieceIndex)
+    {
+        bitfieldMap.get(peerId).set(pieceIndex);
+    }
+
+    //update bitfield after receiving a bitfield message
+    public synchronized void updateEntireBitfield(String peerId, BitSet updated)
+    {
+        bitfieldMap.put(peerId, updated);
+    }
+
+    public synchronized boolean interestCheck(String otherPeer){
+        // check if the host is interested in the other peer
+        for (int i = 0 ; i < numPieces && i < bitfieldMap.get(otherPeer).length(); i++){
+            if ((bitfieldMap.get(otherPeer)).get(i) && !(bitfieldMap.get(peerInfo.peerId)).get(i)){
+                // if other peer has a piece in his bitfield that
+                // the host does not have, then the host is interested
+                return true;
+            }
+        }
+        // compared entire bitfields and did not have any pieces needed.
+        return false;
+    }
+
+    // function to get the download rates of all peers in preferred Neighbors
+    // returns a map of peerId to download rate
+    public synchronized HashMap<String, Integer> getPeerRates()
+    {
+        HashMap<String, Integer> peerRates = new HashMap<>();
+        Set<String> currentPreferredNeighbors = connectedPeers.keySet();
+        for (String peerId : currentPreferredNeighbors)
+        {
+            int peerRate = 0; // CHANGE THIS TO GET THE DOWNLOAD RATE AFTER THAT IS IMPLEMENTED
+            // TODO: getDownloadRate in PeerConnection
+            //int peerRate = connectedPeers.get(peerId).getDownloadRate();
+            peerRates.put(peerId, peerRate);
+        }
+        return peerRates;
+    }
+
+    public  synchronized void updateConnectedPeers(String peerId, PeerConnection peerConnection){
+        connectedPeers.put(peerId, peerConnection);
+    }
+
+    public synchronized void addThread(String peerId, Thread thread){
+        threadMap.put(peerId, thread);
+    }
+
+    public synchronized void stopAllThreads()
+    {
+        Set<String> peerIds = threadMap.keySet();
+        for (String peerId : peerIds)
+        {
+            threadMap.get(peerId).interrupt(); //don't know if interrupt or stop
+        }
+    }
+
+    public synchronized void stopPeer(){
+        //TODO
+        //stop all threads
+        //close all sockets
+        //close all file streams
+        // whatever else clean up needs to be done
+
+    }
+
+
+    // request tracking related methods:
+    public synchronized void updateRequestTracker(int pieceIndex, String peerId)
+    {
+        // mark in the request tracker that piece [pieceIndex] was requested from peer <peerId>
+        requestTracker[pieceIndex] = peerId;
+    }
+
+    public synchronized int checkRequested(String otherPeerID) {
+        // for each piece in the bitfield of the other peer, check if the host has not requested it
+        for (int i = 0; i < (bitfieldMap.get(otherPeerID)).size() && i < numPieces; i++)
+        {
+            if ( bitfieldMap.get(otherPeerID).get(i) && !(bitfieldMap.get(peerInfo.peerId).get(i)) && requestTracker[i] == null)
+            {
+                updateRequestTracker(i, otherPeerID);
+                return i; // return the piece index
+            }
+        }
+        return -1;
+    }
+
+    public synchronized void clearRequestTracker(String peerId)
+    {
+        for (int i = 0; i < requestTracker.length; i++){
+            if (requestTracker[i] != null && requestTracker[i].equals(peerId)){
+                requestTracker[i] = null;
+            }
+        }
+    }
+
+    public synchronized void addInterestedPeer(String peerId){
+        interList.add(peerId);
+    }
+    public synchronized void removeInterestedPeer(String peerId){
+        interList.remove(peerId);
+    }
+
+    //returns true if all peers have the complete file
+    public synchronized boolean checkCompleted()
+    {
+        Set<String> peerIds = bitfieldMap.keySet();
+        for (String peerId : peerIds)
+        {
+            if (!bitfieldMap.get(peerId).equals(numPieces))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public P2PLog getLog(){
         return this.logger;
     }
 
-//    public static void main(String[] args) throws IOException {
-//        Peer peer = new Peer("1001");
-//        peer.setUpPeer();
-//        System.out.println(peer.peerConfig.getFileName());
-//        //System.out.println(peer.peerInfo.getPeerId());
-//    }
 }
 
 
