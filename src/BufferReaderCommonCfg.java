@@ -3,12 +3,12 @@ import java.io.FileReader;
 import java.io.IOException;
 class CommonCfgObject {
     //This class is made to read the Common.cfg file and encapsulate everything into an object
-    private int numberOfPreferredNeighbors;
-    private int unchokingInterval; // in seconds
-    private int optimisticUnchokingInterval; // in seconds
-    private String fileName;
-    private int fileSize; // file size is in bytes
-    private int pieceSize; // piece size is in bytes
+    public int numberOfPreferredNeighbors;
+    public int unchokingInterval; // in seconds
+    public int optimisticUnchokingInterval; // in seconds
+    public String fileName;
+    public int fileSize; // file size is in bytes
+    public int pieceSize; // piece size is in bytes
 
     public CommonCfgObject(int numberOfPreferredNeighbors, int unchokingInterval, int optimisticUnchokingInterval,
                                  String fileName, int fileSize, int pieceSize)
@@ -49,7 +49,7 @@ public class BufferReaderCommonCfg{
         int fileSize = 0;
         int pieceSize = 0;
         //Reads in the file Common.cfg
-        BufferedReader brIn = new BufferedReader(new FileReader("/Users/pedrocamargo/Desktop/Spring24/Networking Fundamentals/P2P/Network_Project/src/Common.cfg"));
+        BufferedReader brIn = new BufferedReader(new FileReader("/Users/andreasanchez/Documents/CNT4007/Network_Project/src/Common.cfg"));
         String line;
         //reads line by line of the file Common.cfg
         while((line = brIn.readLine()) != null)
