@@ -73,8 +73,8 @@ public class Peer {
     // bitset object will be used to track which pieces of the file each peer has.
     public String currOptUnchokedId = null;
     // peerId corresponding to each peer that is optimistically unchoked
-    public OptUnchoked currOptUnchoked;
-    public Choke currChoke;
+    //public OptUnchoked currOptUnchoked;
+    //public Choke currChoke;
 
     public ArrayList<String> peerList;
 
@@ -112,7 +112,7 @@ public class Peer {
         setUpPeer();
 
         // start choke/unchoke cycle:
-        startChokeUnchokeCycle();
+        //startChokeUnchokeCycle();
     }
 
     public void setUpPeer() throws IOException {
@@ -128,6 +128,7 @@ public class Peer {
 
         //initialize the random access file
         // random access file will be used to read and write the file
+        //this makes it easier to read and write to the file in a random specified position
         fileBuilder = new RandomAccessFile(file, "rw");
         // file should be the same length as the original file
         fileBuilder.setLength(peerConfig.getFileSize());
@@ -157,7 +158,7 @@ public class Peer {
         peerServer = new PeerServer(peerInfo, this);
 
         // Start the server in a new thread
-        this.thread = new Thread(peerServer);
+        this.thread = new Thread(() -> peerServer.run());
         this.thread.start();
 
         //connect to the neighbors
@@ -200,6 +201,7 @@ public class Peer {
 
     }
 
+    /*
     public void startChokeUnchokeCycle(){
         // start the choke/unchoke cycle
         this.currChoke = new Choke(this);
@@ -388,6 +390,7 @@ public class Peer {
         }
         return true;
     }
+    */
 
     public P2PLog getLog(){
         return this.logger;

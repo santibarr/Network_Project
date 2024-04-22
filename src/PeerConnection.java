@@ -1,10 +1,12 @@
 // Class to manage connecions between different peers
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /*
     contains Socket
@@ -26,12 +28,19 @@ public class PeerConnection implements Runnable{
     public ObjectOutputStream outputStr = null;
     public String peerID;
     public String otherPeerID;
-    public Handshake handshake;
 
-    public boolean connected = false;
+
+    public boolean hasEnteredConnection = false;
     public boolean start = false;
 
     public Peer hostPeer;
+
+    public final String HEADER = "P2PFILESHARINGPROJ";
+    public final int Header_length = 18;
+    public final int zeroes_length = 10;
+    public final int peer_id_length = 4;
+    public final int handshake_length = 32;
+
 
     public PeerConnection(Peer hostPeer, Socket socketConnection){
         this.socketConnection = socketConnection;
@@ -51,7 +60,6 @@ public class PeerConnection implements Runnable{
         catch (IOException e){
             throw new RuntimeException(e);
         }
-        this.handshake = new Handshake(peerID);
 
     }
 
@@ -76,37 +84,56 @@ public class PeerConnection implements Runnable{
         catch (IOException e){
             throw new RuntimeException(e);
         }
-        //this.handshake = new Handshake(peerID);
 
     }
 
     public void run() {
         try {
-
             //create handshake message to be sent
-
-            byte[] handshakeByte;
-            //this.handshake = new Handshake(this.peerID);
-            handshakeByte = this.handshake.MakeHandshake();
-
+            byte[] handshakeByte = new byte[32];
+            ByteArrayOutputStream handshakeBuilder = new ByteArrayOutputStream();
+            try {
+                //write the header
+                handshakeBuilder.write(HEADER.getBytes());
+                //next 10 bytes are 0's
+                byte[] zeroBytes = new byte[10];
+                handshakeBuilder.write(zeroBytes);
+                //write the peerId
+                handshakeBuilder.write(this.peerID.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            handshakeByte = handshakeBuilder.toByteArray();
             outputStr.write(handshakeByte);
             outputStr.flush();
-            //hostPeer.getLog().logTCPsend(otherPeerID);
             while(true) {
-                if (!this.connected) {
+                if (this.hasEnteredConnection == false) {
                     // Wait for the handshake response
                     byte[] returnedMessage = new byte[32];
                     inputStr.readFully(returnedMessage);
 
 
-                    //process the handshake
-                    this.handshake.ReceiveHandshake(returnedMessage);
-                    this.otherPeerID = this.handshake.peerId;
+                    //read in the message to see if the formatting is correct
+                    String otherID = null;
+                    if (returnedMessage.length != 32) {
+                        throw new IllegalArgumentException("Invalid handshake message length.");
+                    }
+                    //validate the header
+                    String receivedHeader = new String(Arrays.copyOfRange(returnedMessage, 0, HEADER.length()));
+                    if (!HEADER.equals(receivedHeader)) {
+                        throw new IllegalArgumentException("Invalid handshake header.");
+                    }
+                    //extract the peerId which is going to be the other peerID
+                    byte[] peerIdBytes = Arrays.copyOfRange(returnedMessage, 28, 32);
+                    otherID = new String(peerIdBytes);
+
+                    //convert the otherPeerID to the peerID passed through
+                    this.otherPeerID = otherID;
                     this.hostPeer.connectedPeers.put(this.otherPeerID, this);
                     this.hostPeer.threadMap.put(this.otherPeerID, Thread.currentThread());
-                    this.connected = true;
+                    this.hasEnteredConnection = true;
 
-                    if (this.start) {
+                    if (this.start == true) {
                         this.hostPeer.getLog().logTCPsend(this.otherPeerID);
                     } else {
                         this.hostPeer.getLog().logTCPreceive(this.otherPeerID);

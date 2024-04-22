@@ -27,7 +27,7 @@ public class P2PLog {
             //FileHandler
             this.logHandler = new FileHandler(this.logFile, false);
             //set dates for when logging occurred
-            this.dateTimeFormatter = new SimpleDateFormat("dd-mm-yyyy HH:MM:SS");
+            this.dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             //Set the logger
             this.logHandler.setFormatter(new SimpleFormatter());
             this.logger = Logger.getLogger("PeerLogs");
@@ -131,7 +131,7 @@ public class P2PLog {
     //Helper method that gets the current time
     private synchronized String getcurrentTime(){
 
-        DateTimeFormatter date = DateTimeFormatter.ofPattern("dd-mm-yyy HH:MM:SS");
+        DateTimeFormatter date = DateTimeFormatter.ofPattern("dd-MM-yyy HH:mm:ss");
         return LocalDateTime.now().format(date);
     }
 
