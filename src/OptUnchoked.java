@@ -35,7 +35,7 @@ public class OptUnchoked implements Runnable {
     //main method to run: gets a new optimistically unchoked peer from list,
     //and performs the handler logic to run smoothly
     private void performUnchoking(){
-        String prevOptPeer = p.optunchokedPeer;
+        String prevOptPeer = p.currOptUnchokedId;
         List<String> intPeers = new ArrayList<>(p.peerList);
         intPeers.remove(prevOptPeer);
 
@@ -62,7 +62,7 @@ public class OptUnchoked implements Runnable {
     private void handleOptUnchoke(String newOptUnchokePeer, String oldOptUnchokepeer){
 
         //set new unchoked peer
-        p.optunchokedPeer = newOptUnchokePeer;
+        p.currOptUnchokedId = newOptUnchokePeer;
 
         //add more to it -> we Need Peer to work
 

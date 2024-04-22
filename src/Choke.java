@@ -22,7 +22,7 @@ public class Choke implements Runnable{
     public void chokePeriodically(){
         // schedule the choking of peers
         // modify initial delay if necessary
-        scheduler.scheduleAtFixedRate(this, 10, chokingInterval, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this, 6, chokingInterval, TimeUnit.SECONDS);
     }
 
     // run method will periodically update the which peers are choked and unchoked
