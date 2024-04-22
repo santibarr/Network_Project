@@ -142,14 +142,14 @@ public class Peer {
            String peerId = peerIds[i];
               // if the peer has the file, set all bits the corresponding index
                 if (allPeerInfoMap.get(peerId).peerHasFile.equals("1")) {
-                    //sets each index to the number of the piece index
+                    //sets each index to true since the peer has the file
                     // therefore all the numbers in the array are the available pieces
                     bitfield.set(0, numPieces);
                     this.bitfieldMap.put(peerId, bitfield); // the corresponding bitfield with the peerId
                 }
                 else{
                     //the bitfield array is empty because
-                    bitfield.clear(); // set all bits to 0 since the peer does not have the file
+                    bitfield.clear(); // set all bits to 0 = false since the peer does not have the file
                     this.bitfieldMap.put(peerId, bitfield); // the corresponding bitfield with the peerId
                 }
        }
@@ -231,7 +231,7 @@ public class Peer {
             {
                 // in this case we have to calculate the size of the last piece
                 // since it does not match up to getPieceSize
-                int lastPieceSize = peerConfig.getFileSize() % peerConfig.getPieceSize();
+                int lastPieceSize = peerConfig.getFileSize() % peerConfig.pieceSize;
                 pieceData = new byte[lastPieceSize];
                 fileBuilder.seek(pieceIndex * peerConfig.pieceSize);
                 fileBuilder.read(pieceData);
@@ -253,7 +253,7 @@ public class Peer {
     public synchronized void writePiece(int pieceIndex, byte[] pieceData) throws IOException {
         // write the pieceData to the file at the pieceIndex
         try {
-            fileBuilder.seek(pieceIndex * peerConfig.getPieceSize());
+            fileBuilder.seek(pieceIndex * peerConfig.pieceSize);
             fileBuilder.write(pieceData);
         }
         catch (IOException e) {

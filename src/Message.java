@@ -16,13 +16,13 @@ public class Message {
 
 
     //message length
-    private int length;
+    public int length;
 
     //message type: 8 values
-    private char type;
+    public char type;
 
     //payload byte array
-    private byte[] payload;
+    public byte[] payload;
 
     //we are going to have overloaded Message types
     //This Message will contain: choke, unchoked, interested and uninterested
@@ -51,7 +51,7 @@ public class Message {
             output.write(newLength);
             output.write((byte) this.type);
             output.write(this.payload);
-            output.flush();
+           // output.flush();
         }
         catch(Exception e){
             e.printStackTrace();
@@ -61,14 +61,14 @@ public class Message {
     }
 
     //read in the message
-    public void readMessage(int len, byte[] payload){
+    public void readMessage(int len, byte[] payload, char type){
 
         this.length = len;
-        this.type = (char) payload[0];
+        this.type = type;
 
         //get the payload from message
-        byte[] temp = new byte[payload.length - 1];
-        System.arraycopy(payload, 1, temp, 0, this.payload.length - 1);
+        byte[] temp = new byte[payload.length];
+        System.arraycopy(payload, 1, temp, 0, this.payload.length);
         this.payload = temp;
     }
 

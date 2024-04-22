@@ -142,7 +142,12 @@ public class PeerConnection implements Runnable{
 
                     // after establishing connection, send bitfield to other peer
                     BitSet hostPeerBitfield = hostPeer.bitfieldMap.get(hostPeer.peerInfo.peerId);
-                    if (hostPeer.peerInfo.peerHasFile.equals("1") || hostPeerBitfield.cardinality() > 0) {
+                    //find out the count for the true bitsets which are the pieces available
+                    int count = 0;
+                    for(int i = hostPeerBitfield.nextSetBit(0);i>=0; i = hostPeerBitfield.nextSetBit(i+1)){
+                        count++;
+                    }
+                    if (hostPeer.peerInfo.peerHasFile.equals("1") || count > 0) {
                         try {
                             Message bitfieldMsg = new Message('5', hostPeerBitfield.toByteArray());
                             // send the bitfield message
@@ -155,7 +160,7 @@ public class PeerConnection implements Runnable{
                     }
                 } else {
                     //process incoming messages
-                    while (inputStr.available() < 4){ //wait until the input stream has at least 4 bytes
+                    while (inputStr.available() < 3){ //wait until the input stream has at least 4 bytes
                         try {
                             Thread.sleep(100); // don't know if this is an appropriate time to wait
                             // experiment with different times if necessary
@@ -165,15 +170,25 @@ public class PeerConnection implements Runnable{
                     }
 
                     //parse the input and get everything from the response
-                    int msgSize = inputStr.readInt();
 
-                    byte[] resp = new byte[msgSize];
-                    inputStr.readFully(resp); //read the message from the input stream
-                    char type = (char) resp[0]; //message type is the first byte
+                    byte[] msgLength = new byte[4]; // make buffer for message length
+                    int messageSize = inputStr.read(msgLength,0,4); //read the message length
+                    //int msgSize = inputStr.readInt();
+
+                   // byte[] resp = new byte[messageSize]; // make buffer with the size of the message
+                    byte[] messageTypeBuffer = new byte[1]; // make buffer for the message type
+                    int messageType = inputStr.read(messageTypeBuffer,4,1);
+                    //inputStr.readFully(resp); //read the message from the input stream
+                    char type = (char) messageType; //message type is the first byte
 
                     //based on the response we get, we will build a new message
                     Message msg = new Message(type);
-                    msg.readMessage(msgSize, resp);
+                    msg.length = messageSize;
+                    msg.type = type;
+                    //now obtain the response
+                    byte[] response = new byte[messageSize];
+                    inputStr.readFully(response);
+                    msg.payload = response;
 
                     //sort everything into its place based on message type
                     switch (type) {
