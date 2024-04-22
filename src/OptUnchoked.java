@@ -42,6 +42,13 @@ public class OptUnchoked implements Runnable {
 
         String newOptUnchokedPeer = newOptUnchokedPeer(intPeers);
 
+        if(newOptUnchokedPeer == null){
+            checkOldOptPeer(prevOptPeer);
+        }
+        else{
+            handleOptUnchoke(newOptUnchokedPeer, prevOptPeer);
+        }
+
 
     }
 
@@ -60,13 +67,32 @@ public class OptUnchoked implements Runnable {
         return null;
     }
 
-    private void handleOptUnchoke(String newOptUnchokePeer, String oldOptUnchokepeer){
+    private void handleOptUnchoke(String newOptUnchokePeer, String oldOptUnchokePeer){
 
         //set new unchoked peer
         p.currOptUnchokedId = newOptUnchokePeer;
 
-        //add more to it -> we Need Peer to work
+        //send unchoked message for new peer and log it
+        p.connectedPeers.get(newOptUnchokePeer).UnchokedMsg();
+        p.getLog().logOptimisticallyUnchokedPeer(newOptUnchokePeer);
 
+        //if the old optmistically unchoked peer exists and the unchoked List still has it, then we send a choked msg
+        if(oldOptUnchokePeer != null && !p.unchokedList.contains(oldOptUnchokePeer)){
+            p.connectedPeers.get(oldOptUnchokePeer).ChokeMsg();
+        }
+    }
+
+    private void checkOldOptPeer(String oldOptUnchokePeer){
+        //same if statement as the other method but this is meant as a backup check
+        if(oldOptUnchokePeer != null && !p.unchokedList.contains(oldOptUnchokePeer)){
+            p.connectedPeers.get(oldOptUnchokePeer).ChokeMsg();
+        }
+
+        //We want to check to see if we are done, before we shutdown the class
+        if(p.finished){
+            //p.stopAllThreads();
+            //p.stopPeer();
+        }
     }
 
     //stop scheduler

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -199,6 +200,78 @@ public class PeerConnection implements Runnable{
 
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    //send the "have" message back to the peer: we need the piece index for that
+    public void haveMsg(int index){
+
+        try{
+            //index
+            byte[] msg = ByteBuffer.allocate(4).putInt(index).array();
+            //craft the message
+            Message newMsg = new Message('4', msg);
+            this.outputStr.write(newMsg.writeMessage());
+            this.outputStr.flush();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //Write the choke message for the peer
+    public void ChokeMsg(){
+
+        try{
+            //doesn't have a payload, so we need only the type
+            Message newMsg = new Message('0');
+            this.outputStr.write(newMsg.writeMessage());
+            this.outputStr.flush();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //Write the "unchoked" msg for the peer
+    public void UnchokedMsg(){
+
+        try{
+            //doesn't have a payload, so we need only the type
+            Message newMsg = new Message('1');
+            this.outputStr.write(newMsg.writeMessage());
+            this.outputStr.flush();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //Write the "interested" msg for the peer
+    public void interestedMsg(){
+
+        try{
+            //doesn't have a payload, so we need only the type
+            Message newMsg = new Message('2');
+            this.outputStr.write(newMsg.writeMessage());
+            this.outputStr.flush();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //Write the "not interested" msg for the peer
+    public void notInterestedMsg(){
+
+        try{
+            //doesn't have a payload, so we need only the type
+            Message newMsg = new Message('3');
+            this.outputStr.write(newMsg.writeMessage());
+            this.outputStr.flush();
+        }
+        catch(Exception e){
+            e.printStackTrace();
         }
     }
 }
