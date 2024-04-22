@@ -44,13 +44,13 @@ public class P2PLog {
 
     //log when Peer sends TCP message
     public synchronized void logTCPsend(String peer){
-        String message = String.format("%s: Peer %s is making a connection to %s", getcurrentTime(), this.peerId, peer);
+        String message = String.format("%s: Peer %s makes a connection to %s", getcurrentTime(), this.peerId, peer);
         this.logger.log(Level.INFO, message);
     }
 
     //log when peer receives TCP message
     public synchronized void logTCPreceive(String peer){
-        String message = String.format("%s: Peer %s is receiving a connection from %s", getcurrentTime(), peer, this.peerId);
+        String message = String.format("%s: Peer %s is receiving a connection from %s", getcurrentTime(), this.peerId,peer);
         this.logger.log(Level.INFO, message);
     }
 

@@ -66,7 +66,7 @@ public class Peer {
     public HashMap<String, Thread> threadMap;
 
     //logger
-    P2PLog logger;
+    public P2PLog logger;
 
     public HashMap<String, BitSet> bitfieldMap;
 
@@ -78,7 +78,7 @@ public class Peer {
 
     public HashSet<String> interList;
 
-
+    public Thread thread;
 
 
 
@@ -148,19 +148,13 @@ public class Peer {
         peerServer = new PeerServer(peerInfo, this);
 
         // Start the server in a new thread
-        new Thread(() -> {
-            try {
-                peerServer.run();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-
+        this.thread = new Thread(peerServer);
+        this.thread.start();
 
         //connect to the neighbors
         System.out.println("Trying to connect to peers...");
             try {
-//                Thread.sleep(5000); //temporary sleep to allow all peers to start
+                //Thread.sleep(5000); //temporary sleep to allow all peers to start
                 for (String peerIdInNetwork : peersInNetwork) {
                     if (!peerIdInNetwork.equals(peerInfo.peerId)) {
                         //skip connection to self:
@@ -170,8 +164,9 @@ public class Peer {
                         // Each Peer will have n-1 PeerConnections (where n is the number of peers in the network)
                         int otherPeerPort = Integer.parseInt(allPeerInfoMap.get(peerIdInNetwork).peerPort);
                         Socket interPeerSocket = new Socket(peerInfo.peerAddress, otherPeerPort);
-                        PeerConnection peerConnection = new PeerConnection(this, interPeerSocket, peerIdInNetwork);
-                        
+                        PeerConnection peerConnection = new PeerConnection(this, interPeerSocket);
+                        peerConnection.otherPeerID = this.peerInfo.peerId;
+                        peerConnection.start = true;
                         // add the peerConnection to the connectedPeers set
                         connectedPeers.put(peerIdInNetwork, peerConnection);
                         // start the thread for the peerConnection
