@@ -73,8 +73,8 @@ public class Peer {
     // bitset object will be used to track which pieces of the file each peer has.
     public String currOptUnchokedId = null;
     // peerId corresponding to each peer that is optimistically unchoked
-    //public OptUnchoked currOptUnchoked;
-    //public Choke currChoke;
+    public OptUnchoked currOptUnchoked;
+    public Choke currChoke;
 
     public ArrayList<String> peerList;
 
@@ -188,7 +188,6 @@ public class Peer {
 
                         System.out.println("Peer " + peerInfo.peerId + " is connected to Peer " + peerIdInNetwork);
 
-                        // DON'T CONTINUE UNTIL WE FIGURE OUT THE CONNECTION BETWEEN PEERS LOCALLY
                     } else {
                         break;
                     }
@@ -201,7 +200,7 @@ public class Peer {
 
     }
 
-    /*
+
     public void startChokeUnchokeCycle(){
         // start the choke/unchoke cycle
         this.currChoke = new Choke(this);
@@ -234,13 +233,13 @@ public class Peer {
                 // since it does not match up to getPieceSize
                 int lastPieceSize = peerConfig.getFileSize() % peerConfig.getPieceSize();
                 pieceData = new byte[lastPieceSize];
-                fileBuilder.seek(pieceIndex * peerConfig.getPieceSize());
+                fileBuilder.seek(pieceIndex * peerConfig.pieceSize);
                 fileBuilder.read(pieceData);
             }
             else
             {
                 pieceData = new byte[peerConfig.getPieceSize()];
-                fileBuilder.seek(pieceIndex * peerConfig.getPieceSize());
+                fileBuilder.seek(pieceIndex * peerConfig.pieceSize);
                 fileBuilder.read(pieceData);
             }
             return pieceData;
@@ -390,7 +389,7 @@ public class Peer {
         }
         return true;
     }
-    */
+
 
     public P2PLog getLog(){
         return this.logger;

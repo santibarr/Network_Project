@@ -1,9 +1,7 @@
 //<<<<<<< Updated upstream
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class OptUnchoked implements Runnable {
 
@@ -14,9 +12,18 @@ public class OptUnchoked implements Runnable {
 
 
     public OptUnchoked(Peer peer){
+        // calls the peer class to get the peer configuration
         this.p = peer;
-        this.interval = peer.peerConfig.getOptimisticUnchokingInterval();
-        this.scheduler = Executors.newScheduledThreadPool(1);
+        // obtain the interval for optimistic unchoking
+        this.interval = peer.peerConfig.optimisticUnchokingInterval;
+        // creates a scheduler for the specific thread
+        this.scheduler = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
+            private final AtomicInteger counter = new AtomicInteger(0);
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r, "OptUnchokedThread-" + counter.getAndIncrement());
+            }
+        });
     }
 
     public void UnchokedPeriodically(){
