@@ -189,41 +189,51 @@ public class PeerConnection implements Runnable{
                     Message msg = new Message(messageSize,type,response);
 
                     //sort everything into its place based on message type
-                    switch (type) {
-                        //choked message
-                        case '0':
-                            System.out.println("this is in case 0");
-                            this.hostPeer.getLog().logChokedPeer(this.otherPeerID);
-                            break;
-                        //unchoked message
-                        case '1':
-                            System.out.println("this is in case 1");
-                            break;
-                        //interested
-                        case '2':
-                            System.out.println("this is in case 2");
-                            break;
-                        //not interested
-                        case '3':
-                            System.out.println("this is in case 3");
-                            break;
-                        //have
-                        case '4':
-                            System.out.println("this is in case 4");
-                            break;
-                        //bitfield
-                        case '5':
-                            System.out.println("this is in case 5");
-                            break;
-                        //request
-                        case '6':
-                            System.out.println("this is in case 6");
-                            break;
-                        //piece
-                        case '7':
-                            System.out.println("this is in case 7");
-                            Piece(msg);
-                            break;
+                    if(type == '0') {
+                        System.out.println("this is in case 0");
+                        Choke();
+                        break;
+                    }
+                    else if(type == '1'){
+                        System.out.println("this is in case 1");
+                        Unchoke();
+                        break;
+                    }
+                    //interested section
+                    else if(type == '2'){
+                        System.out.println("this is in case 2");
+                        Interested();
+                        break;
+                    }
+                    //not interested section
+                    else if(type == '3'){
+                        System.out.println("this is in case 3");
+                        notInterested();
+                        break;
+                    }
+                    //have section
+                    else if(type == '4'){
+                        System.out.println("this is in case 4");
+                        break;
+                    }
+                    //bitfield section
+                    else if(type == '5'){
+                        System.out.println("this is in case 5");
+                        break;
+                    }
+                    //request section
+                    else if(type == '6'){
+                        System.out.println("this is in case 6");
+                        break;
+                    }
+                    //piece section
+                    else if(type == '7'){
+                        System.out.println("this is in case 7");
+                        Piece(msg);
+                        break;
+                    }
+                    else{
+                        break;
                     }
 
                 }
@@ -237,6 +247,48 @@ public class PeerConnection implements Runnable{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void Choke(){
+
+        //choke
+        this.hostPeer.clearRequestTracker(this.otherPeerID);
+
+        //log choking
+        this.hostPeer.getLog().logChokedPeer(this.otherPeerID);
+    }
+
+    public void Unchoke(){
+
+        //unchoke peer
+        int request = this.hostPeer.checkRequested(this.otherPeerID);
+
+        if(request < 0){
+            this.notInterestedMsg();
+        }
+        else{
+            this.requestMsg(request);
+        }
+
+        //log unchoke
+        this.hostPeer.getLog().logUnchokedPeer(this.otherPeerID);
+    }
+
+    public void Interested(){
+        //add other peer to host interested peer list
+        this.hostPeer.addInterestedPeer(this.otherPeerID);
+
+        //log interested
+        this.hostPeer.getLog().logInterestedPeer(this.otherPeerID);
+    }
+
+    public void notInterested(){
+
+        //remove other peer if hostPeer is not interested in them
+        this.hostPeer.removeInterestedPeer(this.otherPeerID);
+
+        //log notInterested
+        this.hostPeer.getLog().logUninterestedPeer(this.otherPeerID);
     }
 
     public void Piece(Message msg){
@@ -332,6 +384,20 @@ public class PeerConnection implements Runnable{
             Message newMsg = new Message('3');
             this.outputStr.write(newMsg.writeMessage());
             this.outputStr.flush();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void requestMsg(int pieceBit){
+        try{
+            //build the request msg
+            byte [] msg = ByteBuffer.allocate(4).putInt(pieceBit).array();
+            Message newMsg = new Message('6',msg);
+            this.outputStr.write(newMsg.writeMessage());
+            this.outputStr.flush();
+
         }
         catch(Exception e){
             e.printStackTrace();
