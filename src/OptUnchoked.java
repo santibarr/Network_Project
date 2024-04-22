@@ -15,7 +15,7 @@ public class OptUnchoked implements Runnable {
 
     public OptUnchoked(Peer peer){
         this.p = peer;
-        //this.interval = peer.
+        this.interval = peer.peerConfig.getOptimisticUnchokingInterval();
         this.scheduler = Executors.newScheduledThreadPool(1);
     }
 
