@@ -16,13 +16,13 @@ public class Message {
 
 
     //message length
-    private int length;
+    public int length;
 
     //message type: 8 values
-    private char type;
+    public char type;
 
     //payload byte array
-    private byte[] payload;
+    public byte[] payload;
 
     //we are going to have overloaded Message types
     //This Message will contain: choke, unchoked, interested and uninterested
@@ -79,7 +79,18 @@ public class Message {
         return bits;
     }
 
-    public char getType(){
-        return this.type;
+    //get index from message byte header
+    public int retrieveIndexFromMsg(byte[] msg, int start){
+        byte[] len = new byte[4];
+        System.arraycopy(msg,start,len,0,4);
+        return ByteBuffer.wrap(len).getInt();
+    }
+
+    //Get the piece from the payload portion of the message
+    public byte[] retrievePiecePayload(){
+        int size = this.length - 5;
+        byte[] piece = new byte[size];
+        System.arraycopy(this.payload,4,piece,0,size);
+        return piece;
     }
 }
