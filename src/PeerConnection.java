@@ -214,11 +214,13 @@ public class PeerConnection implements Runnable{
                     //have section
                     else if(type == '4'){
                         System.out.println("this is in case 4");
+                        Have(msg);
                         break;
                     }
                     //bitfield section
                     else if(type == '5'){
                         System.out.println("this is in case 5");
+                        Bitfield(msg);
                         break;
                     }
                     //request section
@@ -289,6 +291,50 @@ public class PeerConnection implements Runnable{
 
         //log notInterested
         this.hostPeer.getLog().logUninterestedPeer(this.otherPeerID);
+    }
+
+    public void Have(Message msg){
+        int pieceIndex = msg.retrieveIndexFromMsg(msg.payload,0);
+        this.hostPeer.updateBitfield(this.otherPeerID,pieceIndex);
+
+        //check to see if we have everything done and stop the peer
+        if(this.hostPeer.checkCompleted()){
+            this.hostPeer.stopPeer();
+        }
+
+        //We want to see if we are still interested in the other peer
+        if(this.hostPeer.interestCheck(this.otherPeerID)){
+            this.interestedMsg();
+            this.hostPeer.getLog().logInterestedPeer(this.otherPeerID);
+        }
+        else{
+            this.notInterestedMsg();
+            this.hostPeer.getLog().logUninterestedPeer(this.otherPeerID);
+        }
+
+        //log the message
+        this.hostPeer.getLog().logHave(this.otherPeerID, pieceIndex);
+
+    }
+
+    public void Bitfield(Message msg){
+
+        //get and update bitfield for the hostpeer
+        BitSet bitset = msg.retrieveBitField();
+        this.hostPeer.updateEntireBitfield(this.otherPeerID,bitset);
+
+        //in response, we want to see if we are interested in the peer
+        //log the response after we send the Msg, need to see if other peer has the file
+        if(!this.hostPeer.checkCompleted()){
+            if(this.hostPeer.interestCheck(this.otherPeerID)){
+                this.interestedMsg();
+                this.hostPeer.getLog().logInterestedPeer(this.otherPeerID);
+            }
+            else{
+                this.notInterestedMsg();
+                this.hostPeer.getLog().logUninterestedPeer(this.otherPeerID);
+            }
+        }
     }
 
     public void Piece(Message msg){
