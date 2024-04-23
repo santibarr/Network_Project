@@ -322,7 +322,7 @@ public class PeerConnection implements Runnable{
         //in response, we want to see if we are interested in the peer
         //log the response after we send the Msg, need to see if other peer has the file
         if(!this.hostPeer.checkCompleted()){
-            if(this.hostPeer.interestCheck(this.otherPeerID)){
+            if(this.hostPeer.peerConfig.fileSize == 1){
                 this.interestedMsg();
                 this.hostPeer.getLog().logInterestedPeer(this.otherPeerID);
             }
@@ -362,6 +362,34 @@ public class PeerConnection implements Runnable{
             //send the have msg
             this.hostPeer.updateRequestTracker(pieceIndex, null);
             this.hostPeer.HaveMessage();
+
+            if(this.hostPeer.bitfieldMap.get(this.otherPeerID).cardinality() != this.hostPeer.numPieces){
+
+                //get the requested info
+                int request = this.hostPeer.checkRequested(this.otherPeerID);
+
+                //no negative values in request index
+                if(request == -1){
+                    this.notInterestedMsg();
+                    this.hostPeer.getLog().logUninterestedPeer(this.otherPeerID);
+                }
+                else{
+                    this.interestedMsg();
+                    this.hostPeer.getLog().logInterestedPeer(this.otherPeerID);
+                }
+            }
+            //we finished the log because we finished everything necessary for this peer
+            else{
+                this.hostPeer.getLog().logCompletionofPeer(this.peerID);
+                if(this.hostPeer.finished){
+
+                    //stop everything
+                    this.hostPeer.stopPeer();
+                }
+                //otherwise send a not interested mdg and log but towards self
+                this.notInterestedMsg();
+                this.hostPeer.getLog().logUninterestedPeer(this.peerID);
+            }
 
 
 

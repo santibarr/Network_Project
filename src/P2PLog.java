@@ -74,13 +74,13 @@ public class P2PLog {
 
     //log interested neighbors
     public synchronized void logInterestedPeer(String peer){
-        String message = String.format("%s: Peer %s is interested in peer %s", getcurrentTime(), this.peerId, peer);
+        String message = String.format("%s: Peer %s received the 'interested' message from Peer %s", getcurrentTime(), this.peerId, peer);
         this.logger.log(Level.INFO, message);
     }
 
     //log uninterested neighbors
     public synchronized void logUninterestedPeer(String peer){
-        String message = String.format("%s: Peer %s is not interested in peer %s", getcurrentTime(), this.peerId, peer);
+        String message = String.format("%s: Peer %s received the 'not interested' message from Peer %s", getcurrentTime(), this.peerId, peer);
         this.logger.log(Level.INFO, message);
     }
 
@@ -117,6 +117,11 @@ public class P2PLog {
     //log when we want to optimistically unchoke a neighbor (peer)
     public synchronized void logOptimisticallyUnchokedPeer(String peer){
         String message = String.format("%s: Peer %s is optimistically unchoking peer %s", getcurrentTime(), this.peerId, peer);
+        this.logger.log(Level.INFO, message);
+    }
+
+    public synchronized void logCompletionofPeer(String peer){
+        String message = String.format("%s: Peer %s has downloaded the complete file", getcurrentTime(),this.peerId);
         this.logger.log(Level.INFO, message);
     }
 
