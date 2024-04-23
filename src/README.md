@@ -27,7 +27,10 @@ We were only able to run the code in localhost since we were not able to connect
 
 1. Open 6 terminals on your computer.
 2. Navigate to the directory in all of the terminals
-3. Run the following command to compile all java classes: "javac *.java"
+3. Run the following command to compile all java classes:
+   ```
+   javac *.java
+   ```
 4. Each terminal is going to run a different peer, based on a PeerId passed in as Command Line Argument.
 5. On each terminal, run java PeerProcess <peerID>. Check PeerInfo.cfg for valid PeerID's.
    ```
