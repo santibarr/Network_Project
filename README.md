@@ -22,7 +22,11 @@ The protocol is driven by messages of the following types:
 - Request
 - Piece
 
-The purpose is to be able to distribute and manage a file from one peer to a network of 5 other peers through this protocol and using there protocol mechanisms.
+The goal is to distribute and manage a file across a network of six peers, utilizing this protocol and its mechanisms to efficiently handle file sharing among the peers.
+# **Project Description:**
+This is the file that outlines the description and instructions for this project
+
+https://drive.google.com/file/d/1FMoCrQCoMLDbp1vucpZ-fcopopzY0cOJ/view?usp=sharing
 # **⚙️ Setup Steps:**
 The whole project is located in the src folder. We were only able to run the code in localhost since we were not able to connect to the CISE machines.
 
@@ -50,12 +54,14 @@ The whole project is located in the src folder. We were only able to run the cod
 
 *What we were able to do*
 - Read in the PeerInfo.cfg and Common.cgf files correctly
+- Effectively set up peer folders with the corresponding file that the pieces will be read into
 - Create a connection between all the peers
 - Send the handshake to the peers
 - Send interested message to interested peers
 - Send the optimistically unchoking of a peer
+- Logged the actions for each peer for the functionalities above
 
 *What needs improvement*
 
-We encountered issues in capturing logs and having the effective logic for the preferred neighbors, and in the functionality of the 'have' message, piece downloading, and the choking and unchoking processes. Although we developed the code for these features, they did not perform as expected. The logic for choking and unchoking is contained within the Choke.java and OptUnchoke.java files. The logic for the 'have' message and download of pieces is also contained in the PeerConenction.java file.
+We encountered issues in capturing logs and having the effective logic for the preferred neighbors, and in the functionality of the 'have' message, piece downloading, and the choking and unchoking processes. Although we developed the code for these features, they did not perform as expected. The logic for choking and unchoking is contained within the Choke.java and OptUnchoke.java files. The logic for the 'have' message and download of pieces is also contained in the PeerConnection.java file.
     
