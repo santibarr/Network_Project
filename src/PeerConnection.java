@@ -173,17 +173,15 @@ public class PeerConnection implements Runnable{
 
 //                    byte[] msgLength = new byte[4]; // make buffer for message length
 //                    int messageSize = inputStr.read(msgLength,0,4); //read the message length
+                    //the first 4 bytes of the message is the length of the message
                     int msgSize = inputStr.readInt();
-                    char type = (char) inputStr.readByte();
-
-                   // byte[] resp = new byte[messageSize]; // make buffer with the size of the message
-
-                    //now obtain the response
-                    byte[] response = new byte[msgSize];
-                    inputStr.readFully(response);
-
+                    byte[] fullResponse = new byte[msgSize];
+                    inputStr.readFully(fullResponse);
+                    char type = (char) fullResponse[0]; //get the type of the message
+                    byte[] messagePayload = new byte[msgSize - 1];
+                    System.arraycopy(fullResponse, 1, messagePayload, 0, msgSize-1); //get the payload of the message
                     //based on the response we get, we will build a new message
-                    Message msg = new Message(msgSize,type,response);
+                    Message msg = new Message(msgSize, type, messagePayload);
 
                     //sort everything into its place based on message type
                     if(type == '0') {

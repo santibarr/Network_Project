@@ -313,6 +313,14 @@ public class Peer {
         return peerRates;
     }
 
+    public int getNumDownloadedPieces(){
+        return bitfieldMap.get(peerInfo.peerId).cardinality();
+    }
+
+    public boolean checkAllPiecesDownloaded(){
+        return getNumDownloadedPieces() == numPieces;
+    }
+
     public  synchronized void updateConnectedPeers(String peerId, PeerConnection peerConnection){
         connectedPeers.put(peerId, peerConnection);
     }
