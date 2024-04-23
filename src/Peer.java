@@ -115,7 +115,7 @@ public class Peer {
         setUpPeer();
 
         // start choke/unchoke cycle:
-        //startChokeUnchokeCycle();
+        startChokeUnchokeCycle();
     }
 
     public void setUpPeer() throws IOException {
@@ -264,14 +264,13 @@ public class Peer {
         }
     }
 
-    public synchronized void HaveMessage()
+    public synchronized void HaveMessage(int pieceIndex)
     {
         // send the have message to all connected peers
         Set<String> currentPreferredNeighbors = connectedPeers.keySet();
         for (String peerId : currentPreferredNeighbors)
         {
-            //TODO: implement sendHaveMessage in PeerConnection
-             //connectedPeers.get(peerId).haveMsg(this.);
+             connectedPeers.get(peerId).haveMsg(pieceIndex);
         }
     }
 
@@ -340,7 +339,6 @@ public class Peer {
     }
 
     public synchronized void stopPeer(){
-        //TODO
         //stop everything!!!
         try{
             this.currChoke.shutdown();

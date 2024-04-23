@@ -44,10 +44,10 @@ public class OptUnchoked implements Runnable {
     //and performs the handler logic to run smoothly
     private void performUnchoking(){
         String prevOptPeer = p.currOptUnchokedId;
-        List<String> intPeers = new ArrayList<>(p.peerList);
-        intPeers.remove(prevOptPeer);
+        List<String> interestedPeers = new ArrayList<String>(p.interList);
+        interestedPeers.remove(prevOptPeer);
 
-        String newOptUnchokedPeer = newOptUnchokedPeer(intPeers);
+        String newOptUnchokedPeer = newOptUnchokedPeer(interestedPeers);
 
         if(newOptUnchokedPeer == null){
             checkOldOptPeer(prevOptPeer);

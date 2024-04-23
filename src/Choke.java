@@ -16,6 +16,7 @@ public class Choke implements Runnable {
         this.hostPeer = hostPeer;
         this.chokingInterval = hostPeer.peerConfig.getUnchokingInterval();
         this.maxNeighbors = hostPeer.peerConfig.getNumberOfPreferredNeighbors();
+        this.scheduler = Executors.newScheduledThreadPool(1);
 
     }
 
