@@ -35,11 +35,13 @@ We were only able to run the code in localhost since we were not able to connect
 # **What we were able to achieve and what we did not:** 
 
 *What we were able to do*
+- Read in the PeerInfo.cfg and Common.cgf files correctly
 - Create a connection between all the peers
 - Send the handshake to the peers
 - Send interested message to interested peers
 - Send the optimistically unchoking of a peer
 
 *What needs improvement*
-
+We were not able to get the logging for the preferred neighbors, the functionality of the have message, downloading of piece, choking and unchoking, and completion of download.
+We implemented the code for these functionalities, however, we were not able to make them function effectively. 
     
