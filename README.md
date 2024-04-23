@@ -23,7 +23,7 @@ The protocol is driven by messages of the following types:
 - Piece
 
 The goal is to distribute and manage a file across a network of six peers, utilizing this protocol and its mechanisms to efficiently handle file sharing among the peers.
-# **Project Description:**
+# **📄Project Description:**
 This is the file that outlines the description and instructions for this project
 
 https://drive.google.com/file/d/1FMoCrQCoMLDbp1vucpZ-fcopopzY0cOJ/view?usp=sharing
