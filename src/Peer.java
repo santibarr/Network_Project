@@ -84,6 +84,8 @@ public class Peer {
 
     public Thread thread;
 
+    public Destroy destroy;
+
 
 
     // constructor to initialize the peerObject.
@@ -108,6 +110,7 @@ public class Peer {
         this.bitfieldMap = new HashMap<>();
         this.unchokedList = new HashSet<>();
         this.interList = new HashSet<>();
+        this.destroy = new Destroy(this);
 
         setUpPeer();
 
@@ -268,7 +271,7 @@ public class Peer {
         for (String peerId : currentPreferredNeighbors)
         {
             //TODO: implement sendHaveMessage in PeerConnection
-            // connectedPeers.get(peerId).sendHaveMessage();
+             //connectedPeers.get(peerId).haveMsg(this.);
         }
     }
 
@@ -340,10 +343,23 @@ public class Peer {
 
     public synchronized void stopPeer(){
         //TODO
-        //stop all threads
-        //close all sockets
-        //close all file streams
-        // whatever else clean up needs to be done
+        //stop everything!!!
+        try{
+            this.currChoke.shutdown();
+            this.currOptUnchoked.shutdown();
+            this.unchokedList.clear();
+            this.interList.clear();
+            this.logger.shutdownLogger();
+            this.fileBuilder.close();
+            this.finished = true;
+            this.peerServer.peerSocket.close();
+            this.destroy.start(6);
+            this.thread.interrupt();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
 
     }
 

@@ -103,7 +103,7 @@ public class OptUnchoked implements Runnable {
     }
 
     //stop scheduler
-    public void stop(){
+    public void shutdown(){
         this.scheduler.shutdownNow();
     }
 }
