@@ -21,6 +21,7 @@ The protocol is driven by messages of the following types:
 - Bitfield
 - Request
 - Piece
+
 The purpose is to be able to distribute and manage a file from one peer to a network of 5 other peers through this protocol and using there protocol mechanisms.
 # **⚙️ Setup Steps:**
 We were only able to run the code in localhost since we were not able to connect to the CISE machines.
