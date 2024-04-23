@@ -120,6 +120,11 @@ public class P2PLog {
         this.logger.log(Level.INFO, message);
     }
 
+    public synchronized void logCompletionofPeer(String peer){
+        String message = String.format("%s: Peer %s has downloaded the complete file", getcurrentTime(),this.peerId);
+        this.logger.log(Level.INFO, message);
+    }
+
     //shut down the logger
     public synchronized void shutdownLogger(){
         //if there is stuff written to the handler, close it
