@@ -30,6 +30,15 @@ We were only able to run the code in localhost since we were not able to connect
 3. Run the following command to compile all java classes: "javac *.java"
 4. Each terminal is going to run a different peer, based on a PeerId passed in as Command Line Argument.
 5. On each terminal, run java PeerProcess <peerID>. Check PeerInfo.cfg for valid PeerID's.
+   ```
+   //each line is for a different terminal
+   java PeerProcess 1001
+   java PeerProcess 1002
+   java PeerProcess 1003
+   java PeerProcess 1004
+   java PeerProcess 1005
+   java PeerProcess 1006
+   ```
 6. The program will start running and you will see the logs of the program.
 
 # **What we were able to achieve and what we did not:** 
