@@ -305,9 +305,7 @@ public class Peer {
         Set<String> currentPreferredNeighbors = connectedPeers.keySet();
         for (String peerId : currentPreferredNeighbors)
         {
-            int peerRate = 0; // CHANGE THIS TO GET THE DOWNLOAD RATE AFTER THAT IS IMPLEMENTED
-            // TODO: getDownloadRate in PeerConnection
-            //int peerRate = connectedPeers.get(peerId).getDownloadRate();
+            int peerRate = connectedPeers.get(peerId).downloadrate;
             peerRates.put(peerId, peerRate);
         }
         return peerRates;
