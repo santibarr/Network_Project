@@ -185,48 +185,40 @@ public class PeerConnection implements Runnable{
 
                     //sort everything into its place based on message type
                     if(type == '0') {
-                        System.out.println("this is in case 0");
                         Choke();
                         break;
                     }
                     else if(type == '1'){
-                        System.out.println("this is in case 1");
                         Unchoke();
                         break;
                     }
                     //interested section
                     else if(type == '2'){
-                        System.out.println("this is in case 2");
                         Interested();
                         break;
                     }
                     //not interested section
                     else if(type == '3'){
-                        System.out.println("this is in case 3");
                         notInterested();
                         break;
                     }
                     //have section
                     else if(type == '4'){
-                        System.out.println("this is in case 4");
                         Have(msg);
                         break;
                     }
                     //bitfield section
                     else if(type == '5'){
-                        System.out.println("this is in case 5");
                         Bitfield(msg);
                         break;
                     }
                     //request section
                     else if(type == '6'){
-                        System.out.println("this is in case 6");
                         Request(msg);
                         break;
                     }
                     //piece section
                     else if(type == '7'){
-                        System.out.println("this is in case 7");
                         Piece(msg);
                         break;
                     }

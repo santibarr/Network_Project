@@ -113,6 +113,9 @@ public class Peer {
         this.destroy = new Destroy(this);
 
         setUpPeer();
+        //show that the PeerInfo and Common.cfg files were read in correctly
+        System.out.println("Peer Info: " + this.peerInfo.peerId + " address: " + this.peerInfo.peerAddress + " port: " + this.peerInfo.peerPort + " hasFile: " + this.peerInfo.peerHasFile);
+        System.out.println("Common Config: " + this.peerConfig.getNumberOfPreferredNeighbors() + " " + this.peerConfig.getUnchokingInterval() + " " + this.peerConfig.getOptimisticUnchokingInterval() + " " + this.peerConfig.getFileName() + " " + this.peerConfig.getFileSize() + " " + this.peerConfig.getPieceSize());
 
         // start choke/unchoke cycle:
         startChokeUnchokeCycle();
@@ -208,9 +211,6 @@ public class Peer {
         // start the choke/unchoke cycle
         this.currChoke = new Choke(this);
         this.currOptUnchoked = new OptUnchoked(this);
-
-        //TODO:
-        //missing code to terminate the threads and clean up
 
         currChoke.chokePeriodically();
         currOptUnchoked.UnchokedPeriodically();

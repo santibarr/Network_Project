@@ -49,7 +49,7 @@ public class BufferReaderCommonCfg{
         int fileSize = 0;
         int pieceSize = 0;
         //Reads in the file Common.cfg
-        BufferedReader brIn = new BufferedReader(new FileReader("/Users/andreasanchez/Documents/CNT4007/Network_Project/src/Common.cfg"));
+        BufferedReader brIn = new BufferedReader(new FileReader("/Users/pedrocamargo/Desktop/Spring24/Networking Fundamentals/P2P/Network_Project/src/Common.cfg"));
         String line;
         //reads line by line of the file Common.cfg
         while((line = brIn.readLine()) != null)

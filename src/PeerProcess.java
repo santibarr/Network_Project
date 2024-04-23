@@ -6,8 +6,6 @@ public class PeerProcess {
         // command line argument corresponds to peerId
         String peerId = args[0];
 
-        //String peerId = "1001";
-
         new Peer(peerId);
     }
 
