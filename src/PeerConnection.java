@@ -322,7 +322,7 @@ public class PeerConnection implements Runnable{
         //in response, we want to see if we are interested in the peer
         //log the response after we send the Msg, need to see if other peer has the file
         if(!this.hostPeer.checkCompleted()){
-            if(this.hostPeer.interestCheck(this.otherPeerID)){
+            if(this.hostPeer.peerConfig.fileSize == 1){
                 this.interestedMsg();
                 this.hostPeer.getLog().logInterestedPeer(this.otherPeerID);
             }
