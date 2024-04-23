@@ -24,7 +24,7 @@ The protocol is driven by messages of the following types:
 
 The purpose is to be able to distribute and manage a file from one peer to a network of 5 other peers through this protocol and using there protocol mechanisms.
 # **⚙️ Setup Steps:**
-We were only able to run the code in localhost since we were not able to connect to the CISE machines.
+The whole project is located in the src folder. We were only able to run the code in localhost since we were not able to connect to the CISE machines.
 
 1. Make sure to change the path of the Common.cfg file in BufferReaderCommonCfg.java line 52 and the PeerInfo.cfg file in BufferReaderPeerInfo in line 15 to the path where these files are in your directory.
 2. Open 6 terminals on your computer.
