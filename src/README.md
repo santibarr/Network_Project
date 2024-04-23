@@ -54,6 +54,5 @@ We were only able to run the code in localhost since we were not able to connect
 - Send the optimistically unchoking of a peer
 
 *What needs improvement*
-We were not able to get the logging for the preferred neighbors, the functionality of the have message, downloading of piece, choking and unchoking, and completion of download.
-We implemented the code for these functionalities, however, we were not able to make them function effectively. 
+We encountered issues in capturing logs and having the effective logic for the preferred neighbors, and in the functionality of the 'have' message, piece downloading, and the choking and unchoking processes. Although we developed the code for these features, they did not perform as expected. The logic for choking and unchoking is contained within the Choke.java and OptUnchoke.java files. The logic for the 'have' message and download of pieces is also contained in the PeerConenction.java file.
     
