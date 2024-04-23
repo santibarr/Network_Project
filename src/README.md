@@ -7,7 +7,8 @@
     - Andrea Sanchez: Worked on Peer, P2Plog, PeerConnection, Choke, Handshake, project debugging, and ReadMe file.
     - Pedro Camargo: Worked on Peer, Choke, Handshake, PeerProcess, project debugging, and project Video. 
     - Santiago Barrios: Worked on OptUnchoke, Message, Destroy, P2Plog, PeerConnection, and ReadMe file
-
+# **🔗Youtube Link:**
+https://youtu.be/4RLVXa6SQSw
 # **🗣️ Project Overview:**
 This project is a P2P File Sharing Protocol. 
 The protocol is driven by messages of the following types:
@@ -32,5 +33,13 @@ We were only able to run the code in localhost since we were not able to connect
 6. The program will start running and you will see the logs of the program.
 
 # **What we were able to achieve and what we did not:** 
+
+*What we were able to do*
+- Create a connection between all the peers
+- Send the handshake to the peers
+- Send interested message to interested peers
+- Send the optimistically unchoking of a peer
+
+*What needs improvement*
 
     
