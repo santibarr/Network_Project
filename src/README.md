@@ -26,14 +26,15 @@ The purpose is to be able to distribute and manage a file from one peer to a net
 # **⚙️ Setup Steps:**
 We were only able to run the code in localhost since we were not able to connect to the CISE machines.
 
-1. Open 6 terminals on your computer.
-2. Navigate to the directory in all of the terminals
-3. Run the following command to compile all java classes:
+1. Make sure to change the path of the Common.cfg file in BufferReaderCommonCfg.java line 52 and the PeerInfo.cfg file in BufferReaderPeerInfo in line 15 to the path where these files are in your directory.
+2. Open 6 terminals on your computer.
+3. Navigate to the directory in all of the terminals
+4. Run the following command to compile all java classes:
    ```
    javac *.java
    ```
-4. Each terminal is going to run a different peer, based on a PeerId passed in as Command Line Argument.
-5. On each terminal, run java PeerProcess <peerID>. Check PeerInfo.cfg for valid PeerID's.
+5. Each terminal is going to run a different peer, based on a PeerId passed in as Command Line Argument.
+6. On each terminal, run java PeerProcess <peerID>. Check PeerInfo.cfg for valid PeerID's.
    ```
    //each line is for a different terminal
    java PeerProcess 1001
@@ -43,7 +44,7 @@ We were only able to run the code in localhost since we were not able to connect
    java PeerProcess 1005
    java PeerProcess 1006
    ```
-6. The program will start running and you will see the logs of the program.
+7. The program will start running and you will see the logs of the program.
 
 # **What we were able to achieve and what we did not:** 
 
